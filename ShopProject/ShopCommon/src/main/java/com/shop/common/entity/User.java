@@ -119,4 +119,8 @@ public class User {
                 ", roles=" + roles +
                 '}';
     }
+    @Transient
+    public String getFullName() {
+        return firstName+ " "+lastName;
+    }
 }
