@@ -11,6 +11,9 @@
         <module name="ShopFrontend" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="ShopWebParent" target="11" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
