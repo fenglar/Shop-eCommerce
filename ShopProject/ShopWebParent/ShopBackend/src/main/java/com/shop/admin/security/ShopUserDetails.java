@@ -15,7 +15,6 @@ public class ShopUserDetails implements UserDetails {
     private User user;
 
     public ShopUserDetails(User user) {
-        super();
         this.user=user;
     }
 
