@@ -26,7 +26,7 @@ public UserDetailsService userDetailsService() {
         return new BCryptPasswordEncoder();
     }
 
-
+@Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService());
@@ -42,7 +42,9 @@ public UserDetailsService userDetailsService() {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests().anyRequest().authenticated().and().formLogin().
-        loginPage("/login").usernameParameter("email").permitAll();
+        loginPage("/login").usernameParameter("email").permitAll().and().logout().permitAll()
+        .and().rememberMe().key("AbcDefgHijKlmnOprs_1234567890")
+        .tokenValiditySeconds(7*24*60*60);
     }
 
     @Override
