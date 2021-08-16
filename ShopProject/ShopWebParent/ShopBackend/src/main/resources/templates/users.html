@@ -45,7 +45,7 @@
                 <th class="hideable-column">
                 <th th:replace="fragments :: column_link('id', 'User ID', 'tag')"/>
                 </th>
-                <th>Photo</th>
+                <th>Photos</th>
                 <th class="hideable-column">
                 <th th:replace="fragments :: column_link('email', 'E-mail','tag')"/>
 </th>
@@ -168,7 +168,7 @@
     <div th:replace="fragments :: footer"></div>
 </div>
 <script type="text/javascript">
-	$(document).ready(function(e){
+	$(document).ready(function(){
 		$(".link-delete").on("click", function(e){
 		e.preventDefault();
 		link=  $(this);

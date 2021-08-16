@@ -33,7 +33,7 @@ public class UserService {
         return userRepo.getUserByEmail(email);
     }
     public List<User> listAll() {
-        return (List<User>) userRepo.findAll(Sort.by("lastName").ascending());
+        return (List<User>) userRepo.findAll(Sort.by("firstName").ascending());
     }
     public Page<User> listByPage(int pageNum, String sortField, String sortDir, String keyword) {
         Sort sort = Sort.by(sortField);
@@ -75,6 +75,9 @@ public class UserService {
            userInDB.setPassword(userInForm.getPassword());
            encodePassword(userInDB);
        }
+        if (userInForm.getPhotos() != null) {
+            userInDB.setPhotos(userInForm.getPhotos());
+        }
       userInDB.setFirstName(userInForm.getFirstName());
        userInDB.setLastName(userInForm.getLastName());
 
