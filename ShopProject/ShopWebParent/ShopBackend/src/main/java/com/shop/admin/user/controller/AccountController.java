@@ -1,7 +1,8 @@
-package com.shop.admin.user;
+package com.shop.admin.user.controller;
 
 import com.shop.admin.FileUploadUtil;
 import com.shop.admin.security.ShopUserDetails;
+import com.shop.admin.user.UserService;
 import com.shop.common.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -28,7 +29,7 @@ String email=loggedUser.getUsername();
 User user = service.getByEmail(email);
 model.addAttribute("user",user);
 
-return "account_form";
+return "users/account_form";
     }
     @PostMapping("/account/update")
     public String saveDetails(User user, RedirectAttributes redirectAttributes,
