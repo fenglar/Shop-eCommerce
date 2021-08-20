@@ -48,7 +48,7 @@
                 <th>Photos</th>
                 <th class="hideable-column">
                 <th th:replace="fragments :: column_link('email', 'E-mail','tag')"/>
-</th>
+                </th>
                 <th th:replace="fragments :: column_link('firstName', 'First Name', 'none')"/>
 
                 <th th:replace="fragments :: column_link('lastName', 'Last Name', 'none')"/>
@@ -65,60 +65,60 @@
 
                 <th></th>
             </tr>
-           </thead>
-           <tbody>
-<tr th:each="user : ${listUsers}">
-<td class="hideable-column"> [[${user.id}]] </td>
-    <td><span th:if="${user.photos ==null}" class="fas fa-portrait fa-2x icon-dark"></span>
-    <img th:if="${user.photos !=null}" th:src="@{${user.photosImagePath}}"
-    style="width: 100px" />
-    </td>
-    <td class="hideable-column">[[${user.email}]]</td>
-    <td>[[${user.firstName}]]</td>
-    <td>[[${user.lastName}]]</td>
-    <td>[[${user.roles}]]</td>
-    <td><a th:if="${user.enabled == true}" class="fas fa-check-circle fa-2x icon-green"
-           th:href="@{'/users/'+${user.id}+'/enabled/false'}"
-    title="Disable this user"></a>
+            </thead>
+            <tbody>
+            <tr th:each="user : ${listUsers}">
+                <td class="hideable-column"> [[${user.id}]] </td>
+                <td><span th:if="${user.photos ==null}" class="fas fa-portrait fa-2x icon-dark"></span>
+                    <img th:if="${user.photos !=null}" th:src="@{${user.photosImagePath}}"
+                         style="width: 100px" />
+                </td>
+                <td class="hideable-column">[[${user.email}]]</td>
+                <td>[[${user.firstName}]]</td>
+                <td>[[${user.lastName}]]</td>
+                <td>[[${user.roles}]]</td>
+                <td><a th:if="${user.enabled == true}" class="fas fa-check-circle fa-2x icon-green"
+                       th:href="@{'/users/'+${user.id}+'/enabled/false'}"
+                       title="Disable this user"></a>
 
-        <a th:if="${user.enabled == false}" class="fas fa-circle fa-2x icon-dark"
-           th:href="@{'/users/'+${user.id}+'/enabled/true'}"
-           title="Enable this user"></a>
-    </td>
+                    <a th:if="${user.enabled == false}" class="fas fa-circle fa-2x icon-dark"
+                       th:href="@{'/users/'+${user.id}+'/enabled/true'}"
+                       title="Enable this user"></a>
+                </td>
 
-    <td><a class="fas fa-edit fa-2x icon-green" th:href="@{'/users/edit/'+${user.id}}"
-    Title=" Edit this user"></a>
-        &nbsp;&nbsp;
-        <a class="fas fa-trash-alt fa-2x icon-dark link-delete" th:href="@{'/users/delete/'+${user.id}}" th:userId="${user.id}"
-           Title=" Delete this user"></a></td>
-</tr>
-           </tbody>
-       </table>
+                <td><a class="fas fa-edit fa-2x icon-green" th:href="@{'/users/edit/'+${user.id}}"
+                       Title=" Edit this user"></a>
+                    &nbsp;&nbsp;
+                    <a class="fas fa-trash-alt fa-2x icon-dark link-delete" th:href="@{'/users/delete/'+${user.id}}" th:userId="${user.id}"
+                       Title=" Delete this user"></a></td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 
     <div class="less-details">
         <tr th:each="user: ${listUsers}" class="row m-1">
-        <div class="col-8">
-            <div>[[${user.fullName}]]</div>
-            <div>[[${user.roles}]]</div>
-            <div class="mt-2">
-                <a th:if="${user.enabled == true}" class="fas fa-check-circle fa-2x icon-green"
-                   th:href="@{'/users/'+${user.id}+'/enabled/false'}"
-                   title="Disable this user"></a>
-                &nbsp;&nbsp;
-                <a th:if="${user.enabled == false}" class="fas fa-circle fa-2x icon-dark"
-                   th:href="@{'/users/'+${user.id}+'/enabled/true'}"
-                   title="Enable this user"></a>
-                &nbsp;&nbsp;
-                <a class="fas fa-edit fa-2x icon-green" th:href="@{'/users/edit/'+${user.id}}"
-                   Title=" Edit this user"></a>
-                &nbsp;&nbsp;
-                <a class="fas fa-trash-alt fa-2x icon-dark link-delete" th:href="@{'/users/delete/'+${user.id}}" th:userId="${user.id}"
-                   Title=" Delete this user"></a>
-                &nbsp;&nbsp;
+            <div class="col-8">
+                <div>[[${user.fullName}]]</div>
+                <div>[[${user.roles}]]</div>
+                <div class="mt-2">
+                    <a th:if="${user.enabled == true}" class="fas fa-check-circle fa-2x icon-green"
+                       th:href="@{'/users/'+${user.id}+'/enabled/false'}"
+                       title="Disable this user"></a>
+                    &nbsp;&nbsp;
+                    <a th:if="${user.enabled == false}" class="fas fa-circle fa-2x icon-dark"
+                       th:href="@{'/users/'+${user.id}+'/enabled/true'}"
+                       title="Enable this user"></a>
+                    &nbsp;&nbsp;
+                    <a class="fas fa-edit fa-2x icon-green" th:href="@{'/users/edit/'+${user.id}}"
+                       Title=" Edit this user"></a>
+                    &nbsp;&nbsp;
+                    <a class="fas fa-trash-alt fa-2x icon-dark link-delete" th:href="@{'/users/delete/'+${user.id}}" th:userId="${user.id}"
+                       Title=" Delete this user"></a>
+                    &nbsp;&nbsp;
 
+                </div>
             </div>
-        </div>
         </tr>
     </div>
 
@@ -127,13 +127,13 @@
     </div>
     <div class="text-center m-1" th:if="${totalItems} > 0">
         <span>No users found</span>
-</div>
+    </div>
 
     <div th:if="${totalPages > 1}">
         <nav>
             <ul class="pagination justify-content-center flex-wrap">
                 <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
-                   <a th:replace="fragments :: page_link(1, 'First')"></a></li>
+                    <a th:replace="fragments :: page_link(1, 'First')"></a></li>
                 <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
                     <a th:replace="fragments :: page_link(${currentPage-1}, 'Previous')"></a></li>
                 <li th:class="${currentPage != i ? 'page-item' : 'page-item active'}" th:each="i : ${#numbers.sequence(1, totalPages)}">
