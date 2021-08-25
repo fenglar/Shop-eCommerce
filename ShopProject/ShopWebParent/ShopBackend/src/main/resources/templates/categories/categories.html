@@ -9,11 +9,12 @@
         <h2>Manage Categories</h2>
         <a th:href="@{/categories/new}" class="fas fa-folder-plus fa-2x icon-dark mr-2"></a>
         &nbsp;|&nbsp;
-        <a th:href="@{/users/export/csv}" class="fas fa-file-csv fa-2x icon-dark mr-2"></a>
+        <a th:href="@{/categories/export/csv}" class="fas fa-file-csv fa-2x icon-dark mr-2"></a>
     </div>
+    <div th:if="${message!=null}" class="alert alert-success text-center">[[${message}]]</div>
 
     <div>
-        <form th:action="@{/users/page/1}" class="form-inline m-3">
+        <form th:action="@{/categories/page/1}" class="form-inline m-3">
             Filter:&nbsp;
             <input type="search" name="keyword" th:value="${keyword}" class="form-control" required/>
             &nbsp;&nbsp;
@@ -51,11 +52,15 @@
                    <td>
                       <div th:replace="fragments :: category_actions" />
                    </td> -->
+
                </tr>
                </tbody>
            </table>
        </div>
-       <div th:replace="fragments ::footer"></div>
+
+
+
+    <div th:replace="fragments ::footer"></div>
    </div>
    </body>
    </html>

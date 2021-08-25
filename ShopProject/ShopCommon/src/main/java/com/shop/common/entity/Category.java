@@ -43,6 +43,23 @@ public class Category {
         this.parent = parent;
     }
 
+    public static Category copyIdAndName(Category category) {
+        Category copyCategory = new Category();
+        category.setId(category.getId());
+        category.setName(category.getName());
+
+        return copyCategory;
+
+    }
+    public static Category copyIdAndName(Integer id, String name ) {
+        Category copyCategory = new Category();
+        copyCategory.setId(id);
+        copyCategory.setName(name);
+
+        return copyCategory;
+
+    }
+
     public Integer getId() {
         return id;
     }
