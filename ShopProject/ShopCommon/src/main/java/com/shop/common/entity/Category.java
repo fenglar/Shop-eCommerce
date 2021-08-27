@@ -42,6 +42,12 @@ public class Category {
         this(name);
         this.parent = parent;
     }
+    public Category (Integer id, String name, String alias) {
+        super();
+        this.id=id;
+        this.name=name;
+        this.alias=alias;
+    }
 
     public static Category copyIdAndName(Category category) {
         Category copyCategory = new Category();
