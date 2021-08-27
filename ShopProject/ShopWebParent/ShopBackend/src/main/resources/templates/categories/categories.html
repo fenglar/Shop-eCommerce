@@ -48,14 +48,12 @@
                 </td>
                 <td>[[${cat.name}]]</td>
                 <td>[[${cat.alias}]]</td>
-                <!--    <td>
-                      <div th:replace="fragments :: category_status" />
-                   </td>
-                   <td>
-                      <div th:replace="fragments :: category_actions" />
-                   </td> -->
+                <td>
+                    <div th:replace="fragments :: status(${cat.enabled}, 'category', '/categories/' + ${cat.id})" />
+                </td>
 
-               </tr>
+
+            </tr>
                </tbody>
            </table>
        </div>

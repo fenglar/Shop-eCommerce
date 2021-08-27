@@ -41,27 +41,49 @@ public class CategoryController {
     @PostMapping("/categories/save")
     public String saveCategory(Category category, RedirectAttributes redirectAttributes, @RequestParam("fileImage") MultipartFile multipartFile) throws IOException {
 
-
-        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-        category.setImage(fileName);
-        Category savedCategory = service.save(category);
-        String uploadDir = "../category-images/" + savedCategory.getId();
-        FileUploadUtil.cleanDir(uploadDir);
-        FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
-
+        if (!multipartFile.isEmpty()) {
+            String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+            category.setImage(fileName);
+            Category savedCategory = service.save(category);
+            String uploadDir = "../category-images/" + savedCategory.getId();
+            FileUploadUtil.cleanDir(uploadDir);
+            FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+        } else {
+            service.save(category);
+        }
         redirectAttributes.addFlashAttribute("message", "The category has been saved successfully.");
 
         return "redirect:/categories";
     }
 
+    @GetMapping("/categories/edit/{id}")
+    public String editCategory(@PathVariable(name = "id") Integer id, Model model,
+                           RedirectAttributes redirectAttributes) {
+        try {
+            Category category = service.get(id);
+            List<Category> listCategories = service.listCategoriesUsedInForm();
+
+            model.addAttribute("category", category);
+            model.addAttribute("pageTitle", "Edit Category (ID: " + id + " )");
+            model.addAttribute("listCategories", listCategories);
+            return "categories/category_form";
+        } catch (CategoryNotFoundException ex) {
+            redirectAttributes.addFlashAttribute("message", ex.getMessage());
+            return "redirect:/categories";
+        }
+
+    }
+
+/*
     @GetMapping("/categories/{id}/enabled/{status}")
     public String updateUserEnabledStatus(@PathVariable("id") Integer id,
                                           @PathVariable("status") boolean enabled, RedirectAttributes redirectAttributes) {
-        service.updateUserEnabledStatus(id, enabled);
+        service.updateCategoryEnabledStatus(id, enabled);
         String status = enabled ? "enabled" : "disabled";
         String message = "The user ID " + id + "has been " + status;
         redirectAttributes.addFlashAttribute("message", message);
 
         return "redirect:/categories";
     }
+    */
 }
