@@ -22,7 +22,7 @@ public interface CategoryRepository extends PagingAndSortingRepository<Category,
 
     public Category findByAlias(String alias);
 
-    @Query("UPDATE User u SET u.enabled= ?2 WHERE u.id = ?1")
+    @Query("UPDATE Category c SET c.enabled= ?2 WHERE c.id = ?1")
     @Modifying
     public void updateEnabledStatus(Integer id, boolean enabled);
 }

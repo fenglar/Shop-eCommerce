@@ -81,7 +81,7 @@ public class CategoryController {
 
     }
 
-/*
+
     @GetMapping("/categories/{id}/enabled/{status}")
     public String updateUserEnabledStatus(@PathVariable("id") Integer id,
                                           @PathVariable("status") boolean enabled, RedirectAttributes redirectAttributes) {
@@ -92,5 +92,5 @@ public class CategoryController {
 
         return "redirect:/categories";
     }
-    */
+
 }
