@@ -2,6 +2,9 @@ package com.shop.admin.category;
 
 import com.shop.common.entity.Category;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,17 +14,26 @@ import java.util.*;
 @Service
 @Transactional
 public class CategoryService {
+    private static final int ROOT_CATEGORIES_PER_PAGE = 4;
+
     @Autowired
     private CategoryRepository repo;
 
-    public List<Category> listAll(String sortDir) {
+    public List<Category> listByPage(CategoryPageInfo pageInfo, int pageNum, String sortDir) {
         Sort sort = Sort.by("name");
         if (sortDir.equals("asc")) {
             sort = sort.ascending();
         } else if (sortDir.equals("desc")) {
             sort = sort.descending();
         }
-        List<Category> rootCategories = repo.findRootCategories(sort);
+
+        Pageable pageable = PageRequest.of(pageNum - 1, ROOT_CATEGORIES_PER_PAGE, sort);
+        Page<Category> pageCategories = repo.findRootCategories(pageable);
+        List<Category> rootCategories = pageCategories.getContent();
+
+        pageInfo.setTotalElements(pageCategories.getTotalElements());
+        pageInfo.setTotalPages(pageCategories.getTotalPages());
+
         return listHierarchicalCategories(rootCategories, sortDir);
     }
 
@@ -158,12 +170,12 @@ public class CategoryService {
         return sortedChildren;
     }
 
-public void delete(Integer id) throws CategoryNotFoundException {
+    public void delete(Integer id) throws CategoryNotFoundException {
         Long countById = repo.countById(id);
         if (countById == null || countById == 0) {
-            throw new CategoryNotFoundException("Could not find any category with ID "+id);
+            throw new CategoryNotFoundException("Could not find any category with ID " + id);
         }
         repo.deleteById(id);
-}
+    }
 
 }
