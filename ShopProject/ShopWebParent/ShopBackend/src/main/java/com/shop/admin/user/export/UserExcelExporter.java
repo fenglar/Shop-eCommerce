@@ -1,5 +1,6 @@
 package com.shop.admin.user.export;
 
+import com.shop.admin.AbstractExporter;
 import com.shop.common.entity.User;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.xssf.usermodel.*;
@@ -49,7 +50,7 @@ if(value instanceof Integer) {
     }
 
     public void export(List<User> listUsers, HttpServletResponse response) throws IOException {
-        super.setResponseHeader(response, "application/octet-stream",".xlsx");
+        super.setResponseHeader(response, "application/octet-stream",".xlsx", "users_");
 
 writeHeaderLine();
 writeDataLines(listUsers);

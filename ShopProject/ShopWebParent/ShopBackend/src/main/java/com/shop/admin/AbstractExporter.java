@@ -1,4 +1,4 @@
-package com.shop.admin.user.export;
+package com.shop.admin;
 
 import com.shop.common.entity.User;
 
@@ -10,10 +10,10 @@ import java.util.Date;
 import java.util.List;
 
 public class AbstractExporter {
-    public void setResponseHeader(HttpServletResponse response, String contentType, String extension) throws IOException {
+    public void setResponseHeader(HttpServletResponse response, String contentType, String extension, String prefix) throws IOException {
         DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
         String timestamp = dateFormatter.format(new Date());
-        String fileName = "users_" + timestamp + extension;
+        String fileName = prefix + timestamp + extension;
 
         response.setContentType(contentType);
 
