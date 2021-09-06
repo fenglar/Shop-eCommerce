@@ -2,6 +2,10 @@ package com.shop.admin.brand;
 
 import com.shop.common.entity.Brand;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -11,12 +15,25 @@ import java.util.NoSuchElementException;
 @Service
 @Transactional
 public class BrandService {
+    public static final int BRANDS_PER_PAGE = 10;
 
     @Autowired
     private BrandRepository repo;
 
     public List<Brand> listAll() {
         return (List<Brand>) repo.findAll();
+    }
+
+    public Page<Brand> listByPage(int pageNum, String sortField, String sortDir, String keyword) {
+        Sort sort = Sort.by(sortField);
+
+        sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
+
+        Pageable pageable = PageRequest.of(pageNum - 1, BRANDS_PER_PAGE, sort);
+        if (keyword != null) {
+            return repo.findAll(keyword, pageable);
+        }
+        return repo.findAll(pageable);
     }
 
     public Brand save(Brand brand) {
@@ -30,6 +47,7 @@ public class BrandService {
             throw new BrandNotFoundException("Could not find any brand with ID " + id);
         }
     }
+
 
     public void delete(Integer id) throws BrandNotFoundException {
         Long countById = repo.countById(id);
@@ -48,15 +66,15 @@ public class BrandService {
         if (isCreatingNew) {
             if (brandByName != null)
                 return "Duplicate";
-            } else {
-                if (brandByName != null && brandByName.getId() != id) {
-                    return "Duplicate";
-                }
+        } else {
+            if (brandByName != null && brandByName.getId() != id) {
+                return "Duplicate";
             }
-
-            return "OK";
         }
 
+        return "OK";
     }
+
+}
 
 
