@@ -19,16 +19,16 @@
                 class="table table-bordered table-striped table-hover table-responsive-xl">
             <thead class="thead-dark">
             <tr>
-                <th>Brand ID</th>
+                <th class="hideable-column">Brand ID</th>
                 <th>Logo</th>
-                <th Brand Name/>
+                <th th:replace="fragments :: column_link('/brands', 'name', 'Brand Name', 'none')"/>
                 <th>Categories</th>
                 <th></th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="brand: ${listBrands}">
-                <td>[[${brand.id}]]</td>
+                <td class="hideable-column">[[${brand.id}]]</td>
                 <td>
                     <img th:src="@{${brand.logoPath}}" style="width: 100px" class="img-fluid"/>
                 </td>
@@ -57,7 +57,7 @@
                 <img th:src="@{${brand.logoPath}}" style="width: 100px" class="img-fluid"/>
             </div>
             <div class="col-4">
-                <div>[[${brand.name}]]</div>
+                <div><b>[[${brand.name}]]</b></div>
                 <div class="mt-2">
 
                     <div th:replace="fragments :: edit('brand', '/brands/edit/'+${brand.id})"/>
