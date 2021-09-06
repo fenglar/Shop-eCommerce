@@ -71,12 +71,10 @@
     </div>
 
 
+    <div th:replace="fragments :: pagination('/brands', 'brands')"></div>
 
 
-        <div th:replace="fragments :: pagination('/brands', 'brands')"></div>
-
-
-    <div th:replace="modal_fragments :: confirm_modal" />
+    <div th:replace="modal_fragments :: confirm_modal"/>
 
     <div th:replace=" fragments ::footer">
     </div>
@@ -91,6 +89,7 @@ moduleURL = "[[@{/brands}]]";
 			showDeleteConfirmModal($(this), 'brand');
 		});
 	});
+
 </script>
 </body>
 </html>
