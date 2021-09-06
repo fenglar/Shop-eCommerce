@@ -12,7 +12,7 @@
         <a th:href="@{/brands/export/csv}" class="fas fa-file-csv fa-2x icon-dark mr-2"></a>
     </div>
 
-    <div th:replace="fragments :: search_form_and_message"></div>
+    <!--<div th:replace="fragments :: search_form_and_message(/brands/page/1)"></div> -->
 
     <div class="full-details">
         <table
@@ -28,7 +28,7 @@
             </thead>
             <tbody>
             <tr th:each="brand: ${listBrands}">
-                <td class="hideable-column">[[${brand.id}]]</td>
+                <td>[[${brand.id}]]</td>
                 <td>
                     <img th:src="@{${brand.logoPath}}" style="width: 100px" class="img-fluid"/>
                 </td>
@@ -42,7 +42,7 @@
 
                     <div th:replace="fragments :: edit('brand', '/brands/edit/'+${brand.id})"/>
                     &nbsp;
-                    <div th:replace="fragments :: delete('brand', ${brands.id}, '/brands/delete/'+${brand.id}, true)"/>
+                    <div th:replace="fragments :: delete('brand', ${brand.id}, '/brands/delete/'+${brand.id}, true)"/>
 
                 </td>
 
@@ -62,7 +62,7 @@
 
                     <div th:replace="fragments :: edit('brand', '/brands/edit/'+${brand.id})"/>
                     &nbsp;
-                    <div th:replace="fragments :: delete('brand', ${brands.id}, '/brands/delete/'+${brand.id}, true)"/>
+                    <div th:replace="fragments :: delete('brand', ${brand.id}, '/brands/delete/'+${brand.id}, true)"/>
 
                 </div>
             </div>
@@ -73,7 +73,7 @@
 
 
 
-        <div th:replace="fragments :: pagination('brands')"></div>
+        <div th:replace="fragments :: pagination('/brands', 'brands')"></div>
 
 
     <div th:replace="modal_fragments :: confirm_modal" />

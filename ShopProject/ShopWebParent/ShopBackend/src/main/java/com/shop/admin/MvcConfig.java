@@ -6,22 +6,30 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
 @Configuration
 public class MvcConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        String dirName ="user-photos";
-Path userPhotosDir = Paths.get(dirName);
+        String dirName = "user-photos";
+        Path userPhotosDir = Paths.get(dirName);
 
-    String userPhotosPath = userPhotosDir.toFile().getAbsolutePath();
+        String userPhotosPath = userPhotosDir.toFile().getAbsolutePath();
 
-    registry.addResourceHandler("/"+dirName+"/**").addResourceLocations("file:/"+userPhotosPath+"/");
+        registry.addResourceHandler("/" + dirName + "/**").addResourceLocations("file:/" + userPhotosPath + "/");
 
-        String categoryImageDirName ="category-images";
+        String categoryImageDirName = "category-images";
         Path categoryImageDir = Paths.get(categoryImageDirName);
 
         String categoryImagesPath = categoryImageDir.toFile().getAbsolutePath();
 
-        registry.addResourceHandler("/category-images/**").addResourceLocations("file:/"+categoryImagesPath+"/");
+        registry.addResourceHandler("/category-images/**").addResourceLocations("file:/" + categoryImagesPath + "/");
+
+        String brandLogosDirName = "brand-logos";
+        Path brandLogosDir = Paths.get(brandLogosDirName);
+
+        String brandLogosPath = brandLogosDir.toFile().getAbsolutePath();
+
+        registry.addResourceHandler("/brand-logos/**").addResourceLocations("file:/" + brandLogosPath + "/");
     }
 }
