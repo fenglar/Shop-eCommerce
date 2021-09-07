@@ -1,9 +1,6 @@
 package com.shop.admin.brand;
 
-import com.shop.admin.category.CategoryRepository;
-import com.shop.admin.category.CategoryService;
 import com.shop.common.entity.Brand;
-import com.shop.common.entity.Category;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -71,6 +68,7 @@ public class BrandServiceTests {
         assertThat(result).isEqualTo("Duplicate");
 
     }
+
     @Test
     public void testCheckUniqueInEditModeReturnOK() {
         Integer id = 1;
@@ -85,7 +83,5 @@ public class BrandServiceTests {
         assertThat(result).isEqualTo("OK");
 
     }
-
-
 
 }
