@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments :: page_head(${'Brands - Shopme Admin'})"/>
+<head th:replace="fragments :: page_head(${'Brands - Shopme Admin'}, 'none')"/>
 
 <body>
 <div class="container-fluid">
@@ -12,7 +12,7 @@
         <a th:href="@{/brands/export/csv}" class="fas fa-file-csv fa-2x icon-dark mr-2"></a>
     </div>
 
-    <div th:replace="fragments :: search_form_and_message('/brands/page/1)'"></div>
+    <div th:replace="fragments :: search_form_and_message('/brands/page/1')"></div>
 
     <div class="full-details">
         <table
