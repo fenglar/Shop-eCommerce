@@ -18,10 +18,10 @@ public class ProductService {
     }
 
     public Product save(Product product) {
-        if (product.getId()==null) {
+        if (product.getId() == null) {
             product.setCreatedTime(new Date());
         }
-        if(product.getAlias() == null || product.getAlias().isEmpty()) {
+        if (product.getAlias() == null || product.getAlias().isEmpty()) {
             String defaultAlias = product.getName().replaceAll(" ", "-");
             product.setAlias(defaultAlias);
         } else {
@@ -30,5 +30,22 @@ public class ProductService {
         product.setUpdatedTime(new Date());
 
         return repo.save(product);
+    }
+
+    public String checkUnique(Integer id, String name) {
+        boolean isCreatingNew = (id == null || id == 0);
+
+        Product productByName = repo.findByName(name);
+
+        if (isCreatingNew) {
+            if (productByName != null)
+                return "Duplicate";
+        } else {
+            if (productByName != null && productByName.getId() != id) {
+                return "Duplicate";
+            }
+        }
+
+        return "OK";
     }
 }

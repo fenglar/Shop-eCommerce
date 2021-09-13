@@ -11,7 +11,7 @@ public interface ProductRepository extends PagingAndSortingRepository<Product, I
 
     public Long countById(Integer id);
 
-    public Brand findByName(String name);
+    public Product findByName(String name);
 
     @Query("SELECT p FROM Product p WHERE p.name LIKE %?1%")
     public Page<Product> findAll(String keyword, Pageable pageable);

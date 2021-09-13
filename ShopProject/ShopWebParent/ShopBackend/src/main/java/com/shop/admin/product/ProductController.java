@@ -48,6 +48,7 @@ public class ProductController {
     public String saveProduct(Product product, RedirectAttributes ra) {
 productService.save(product);
 ra.addFlashAttribute("message", "The product has been saved successfully.");
+
         return "redirect:/products";
     }
 }

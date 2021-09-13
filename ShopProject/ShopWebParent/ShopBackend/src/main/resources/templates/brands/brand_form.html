@@ -74,54 +74,54 @@
     <div th:replace="fragments :: footer"></div>
 
     <script type="text/javascript">
-moduleURL="[[@{/brands}]]";
-$(document).ready(function() {
+        moduleURL = "[[@{/brands}]]";
+        $(document).ready(function () {
 
-dropdownCategories=$("#categories");
-divChosenCategories=$("#chosenCategories");
+            dropdownCategories = $("#categories");
+            divChosenCategories = $("#chosenCategories");
 
-dropdownCategories.change(function() {
-divChosenCategories.empty();
-showChosenCategories();
-});
-showChosenCategories();
-});
+            dropdownCategories.change(function () {
+                divChosenCategories.empty();
+                showChosenCategories();
+            });
+            showChosenCategories();
+        });
 
-function showChosenCategories() {
-dropdownCategories.children("option:selected").each(function() {
-selectedCategory=$(this);
-catId=selectedCategory.val();
-catName=selectedCategory.text().replace(/-/g, "");
+        function showChosenCategories() {
+            dropdownCategories.children("option:selected").each(function () {
+                selectedCategory = $(this);
+                catId = selectedCategory.val();
+                catName = selectedCategory.text().replace(/-/g, "");
 
-divChosenCategories.append("<span class='badge badge-secondary m-1'>" + catName + "</span>");
-});
-}
+                divChosenCategories.append("<span class='badge badge-secondary m-1'>" + catName + "</span>");
+            });
+        }
 
-function checkUnique(form) {
-brandId= $("#id").val();
-brandName= $("#name").val();
+        function checkUnique(form) {
+            brandId = $("#id").val();
+            brandName = $("#name").val();
 
-			csrfValue = $("input[name='_csrf']").val();
+            csrfValue = $("input[name='_csrf']").val();
 
-url = "[[@{/brands/check_unique}]]";
+            url = "[[@{/brands/check_unique}]]";
 
-params = {id: brandId, name: brandName, _csrf: csrfValue};
+            params = {id: brandId, name: brandName, _csrf: csrfValue};
 
-$.post(url, params, function(response) {
-if (response =="OK") {
-form.submit();
-} else if (response == "Duplicate") {
-showWarningModal("There is another category having same name :" +brandName);
-} else {
-showErrorModal("Unknown response from server");
-}
-}).fail(function() {
-		showErrorModal("Could not connect to the server");
-});
+            $.post(url, params, function (response) {
+                if (response == "OK") {
+                    form.submit();
+                } else if (response == "Duplicate") {
+                    showWarningModal("There is another category having same name :" + brandName);
+                } else {
+                    showErrorModal("Unknown response from server");
+                }
+            }).fail(function () {
+                showErrorModal("Could not connect to the server");
+            });
 
-return false;
+            return false;
 
-}
+        }
 
 
     </script>
