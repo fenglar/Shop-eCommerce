@@ -50,7 +50,7 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "brand_id")
     private Brand brand;
-    @OneToMany(mappedBy="product", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private Set<ProductImage> images = new HashSet<>();
 
     public Product() {
@@ -248,7 +248,14 @@ public class Product {
         this.images = images;
     }
 
-    public void addExtraImage(String imageName){
+    public void addExtraImage(String imageName) {
         this.images.add(new ProductImage(imageName, this));
+    }
+
+    @Transient
+    public String getMainImagePath() {
+        if (id == null || mainImage == null) return "/images/image-thumbnail.png";
+
+        return "/product-images/" + this.id + "/" + this.mainImage;
     }
 }
