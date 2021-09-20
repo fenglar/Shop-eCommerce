@@ -5,10 +5,15 @@ $(document).ready(function () {
     $("input[name='extraImage']").each(function (index) {
         extraImageCount++;
         $(this).change(function () {
-            if(!checkFileSize(this)){
+            if (!checkFileSize(this)) {
                 return;
             }
             showExtraImageThumbnail(this, index);
+        });
+    });
+    $("a[name='linkRemoveExtraImage']").each(function (index) {
+        $(this).click(function () {
+            removeExtraImage(index);
         });
     });
 });

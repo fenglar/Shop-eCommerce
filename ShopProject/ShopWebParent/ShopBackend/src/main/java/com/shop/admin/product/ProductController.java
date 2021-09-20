@@ -73,13 +73,13 @@ public class ProductController {
     }
 
     private void setProductDetails(String[] detailNames, String[] detailValues, Product product) {
-        if(detailNames == null || detailNames.length == 0) return;
-        for (int count = 0; count<detailNames.length; count++){
-            String name =detailNames[count];
+        if (detailNames == null || detailNames.length == 0) return;
+        for (int count = 0; count < detailNames.length; count++) {
+            String name = detailNames[count];
             String value = detailValues[count];
 
-            if(!name.isEmpty() && !value.isEmpty()) {
-                product.addDetail(name,value);
+            if (!name.isEmpty() && !value.isEmpty()) {
+                product.addDetail(name, value);
             }
         }
     }
@@ -153,6 +153,24 @@ public class ProductController {
             redirectAttributes.addFlashAttribute("message", ex.getMessage());
         }
         return "redirect:/products";
+    }
 
+    @GetMapping("/products/edit/{id}")
+    public String editProduct(@PathVariable("id") Integer id, Model model, RedirectAttributes ra) throws ProductNotFoundException {
+        try {
+            Product product = productService.get(id);
+            List<Brand> listBrands = brandService.listAll();
+            Integer numberOfExistingExtraImages = product.getImages().size();
+
+            model.addAttribute("product", product);
+            model.addAttribute("listBrands", listBrands);
+            model.addAttribute("pageTitle", "Edit Product (ID: " + id + ")");
+            model.addAttribute("numberOfExistingExtraImages", numberOfExistingExtraImages);
+
+            return "products/product_form";
+        } catch (ProductNotFoundException ex) {
+            ra.addAttribute("message", ex.getMessage());
+            return "redirect:/products";
+        }
     }
 }
