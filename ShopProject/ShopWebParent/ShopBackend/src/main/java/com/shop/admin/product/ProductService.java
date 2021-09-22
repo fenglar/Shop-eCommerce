@@ -1,8 +1,13 @@
 package com.shop.admin.product;
 
 import com.shop.admin.category.CategoryNotFoundException;
+import com.shop.common.entity.Brand;
 import com.shop.common.entity.Product;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -13,13 +18,27 @@ import java.util.NoSuchElementException;
 @Service
 @Transactional
 public class ProductService {
-
+public static final int PRODUCTS_PER_PAGE = 5;
     @Autowired
     private ProductRepository repo;
 
     public List<Product> listAll() {
         return (List<Product>) repo.findAll();
     }
+
+
+    public Page<Product> listByPage(int pageNum, String sortField, String sortDir, String keyword) {
+        Sort sort = Sort.by(sortField);
+
+        sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
+
+        Pageable pageable = PageRequest.of(pageNum - 1, PRODUCTS_PER_PAGE, sort);
+        if (keyword != null) {
+            return repo.findAll(keyword, pageable);
+        }
+        return repo.findAll(pageable);
+    }
+
 
     public Product save(Product product) {
         if (product.getId() == null) {
