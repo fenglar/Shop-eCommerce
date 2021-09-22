@@ -66,6 +66,14 @@ public static final int PRODUCTS_PER_PAGE = 5;
         return repo.save(product);
     }
 
+    public void saveProductPrice(Product productInForm) {
+        Product productInDB = repo.findById(productInForm.getId()).get();
+        productInDB.setCost(productInForm.getCost());
+        productInDB.setPrice(productInForm.getPrice());
+        productInDB.setDiscountPercent(productInForm.getDiscountPercent());
+        repo.save(productInDB);
+    }
+
     public String checkUnique(Integer id, String name) {
         boolean isCreatingNew = (id == null || id == 0);
 

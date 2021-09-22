@@ -4,6 +4,7 @@ package com.shop.admin.product;
 import com.shop.admin.FileUploadUtil;
 import com.shop.admin.brand.BrandService;
 import com.shop.admin.category.CategoryService;
+import com.shop.admin.security.ShopUserDetails;
 import com.shop.common.entity.Brand;
 import com.shop.common.entity.Category;
 import com.shop.common.entity.Product;
@@ -13,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -46,8 +48,9 @@ public class ProductController {
 
     @GetMapping("/products")
     public String listFirstPage(Model model) {
-    return listByPage(1,model, "name","asc", null, 0);
+        return listByPage(1, model, "name", "asc", null, 0);
     }
+
     @GetMapping("/products/page/{pageNum}")
     public String listByPage(
             @PathVariable(name = "pageNum") int pageNum, Model model,
@@ -58,9 +61,9 @@ public class ProductController {
         Page<Product> page = productService.listByPage(pageNum, sortField, sortDir, keyword, categoryId);
         List<Product> listProducts = page.getContent();
 
-       List<Category> listCategories = categoryService.listCategoriesUsedInForm();
+        List<Category> listCategories = categoryService.listCategoriesUsedInForm();
 
-        long startCount = (pageNum - 1) * productService.PRODUCTS_PER_PAGE+ 1;
+        long startCount = (pageNum - 1) * productService.PRODUCTS_PER_PAGE + 1;
         long endCount = startCount + productService.PRODUCTS_PER_PAGE - 1;
         if (endCount > page.getTotalElements()) {
             endCount = page.getTotalElements();
@@ -68,7 +71,7 @@ public class ProductController {
 
         String reverseSortDir = sortDir.equals("asc") ? "desc" : "asc";
 
-        if(categoryId != null) model.addAttribute("categoryId", categoryId);
+        if (categoryId != null) model.addAttribute("categoryId", categoryId);
 
         model.addAttribute("currentPage", pageNum);
         model.addAttribute("totalPages", page.getTotalPages());
@@ -96,20 +99,28 @@ public class ProductController {
         model.addAttribute("product", product);
         model.addAttribute("listBrands", listBrands);
         model.addAttribute("pageTitle", "Create new product");
+        model.addAttribute("numberOfExistingExtraImages", 0);
 
         return "products/product_form";
     }
 
     @PostMapping("/products/save")
     public String saveProduct(Product product, RedirectAttributes ra,
-                              @RequestParam("fileImage") MultipartFile mainImageMultipart,
-                              @RequestParam("extraImage") MultipartFile[] extraImageMultiparts,
+                              @RequestParam(value = "fileImage", required = false) MultipartFile mainImageMultipart,
+                              @RequestParam(value = "extraImage", required = false) MultipartFile[] extraImageMultiparts,
                               @RequestParam(name = "detailIDs", required = false) String[] detailIDs,
                               @RequestParam(name = "detailNames", required = false) String[] detailNames,
                               @RequestParam(name = "detailValues", required = false) String[] detailValues,
                               @RequestParam(name = "imageIDs", required = false) String[] imageIDs,
-                              @RequestParam(name = "imageNames", required = false) String[] imageNames)
+                              @RequestParam(name = "imageNames", required = false) String[] imageNames,
+                              @AuthenticationPrincipal ShopUserDetails loggedUser)
             throws IOException {
+        if (loggedUser.hasRole("Salesperson")) {
+            productService.saveProductPrice(product);
+            ra.addFlashAttribute("message", "The product has been saved successfully.");
+
+            return "redirect:/products";
+        }
 
         setMainImageName(mainImageMultipart, product);
         setExistingExtraImageNames(imageIDs, imageNames, product);
