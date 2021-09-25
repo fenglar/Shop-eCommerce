@@ -1,6 +1,7 @@
 package com.shop.site.category;
 
 import com.shop.site.common.entity.Category;
+import com.shop.site.common.exception.CategoryNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,15 +12,16 @@ import java.util.Set;
 @Service
 public class CategoryService {
 
-    @Autowired private CategoryRepository repo;
+    @Autowired
+    private CategoryRepository repo;
 
-    public List<Category> listNoChildrenCategories(){
+    public List<Category> listNoChildrenCategories() {
         List<Category> listNoChildrenCategories = new ArrayList<>();
         List<Category> listEnabledCategories = repo.findAllEnabled();
 
-        listEnabledCategories.forEach(category ->{
+        listEnabledCategories.forEach(category -> {
             Set<Category> children = category.getChildren();
-            if(children == null || children.size()==0) {
+            if (children == null || children.size() == 0) {
                 listNoChildrenCategories.add(category);
             }
         });
@@ -27,17 +29,22 @@ public class CategoryService {
         return listNoChildrenCategories;
     }
 
-    public Category getCategory(String alias){
-        return repo.findByAliasEnabled(alias);
+    public Category getCategory(String alias) throws CategoryNotFoundException {
+
+        Category category =  repo.findByAliasEnabled(alias);
+        if(category == null) {
+            throw new CategoryNotFoundException("Could not find any categories with alias"+ alias);
+        }
+        return category;
     }
 
-    public List <Category> getCategoryParents(Category child){
+    public List<Category> getCategoryParents(Category child) {
         List<Category> listParents = new ArrayList<>();
 
         Category parent = child.getParent();
 
-        while(parent != null) {
-            listParents.add(0,parent);
+        while (parent != null) {
+            listParents.add(0, parent);
             parent = parent.getParent();
         }
         listParents.add(child);

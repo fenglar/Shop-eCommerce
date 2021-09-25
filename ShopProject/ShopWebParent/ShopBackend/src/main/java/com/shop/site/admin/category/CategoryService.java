@@ -1,6 +1,7 @@
 package com.shop.site.admin.category;
 
 import com.shop.site.common.entity.Category;
+import com.shop.site.common.exception.CategoryNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

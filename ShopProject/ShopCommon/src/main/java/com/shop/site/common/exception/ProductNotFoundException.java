@@ -1,4 +1,4 @@
-package com.shop.site.admin.product;
+package com.shop.site.common.exception;
 
 public class ProductNotFoundException extends Exception {
     public ProductNotFoundException(String message) {

@@ -1,4 +1,4 @@
-package com.shop.site.admin.category;
+package com.shop.site.common.exception;
 
 public class CategoryNotFoundException extends Exception {
 

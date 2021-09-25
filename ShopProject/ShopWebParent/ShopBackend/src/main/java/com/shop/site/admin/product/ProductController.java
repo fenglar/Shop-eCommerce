@@ -8,6 +8,7 @@ import com.shop.site.admin.security.ShopUserDetails;
 import com.shop.site.common.entity.Brand;
 import com.shop.site.common.entity.Category;
 import com.shop.site.common.entity.Product;
+import com.shop.site.common.exception.ProductNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;

@@ -2,6 +2,7 @@ package com.shop.site.admin.category;
 
 import com.shop.site.admin.FileUploadUtil;
 import com.shop.site.common.entity.Category;
+import com.shop.site.common.exception.CategoryNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
