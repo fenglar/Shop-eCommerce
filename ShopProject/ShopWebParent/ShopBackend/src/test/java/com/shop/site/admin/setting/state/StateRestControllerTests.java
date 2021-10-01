@@ -42,7 +42,7 @@ public class StateRestControllerTests {
     @Test
     @WithMockUser(username = "nam@codejava.net", password = "something", roles = "ADMIN")
     public void testListByStates() throws Exception {
-        Integer countryId = 2;
+        Integer countryId = 1;
         String url = "/states/list_by_country/" + countryId;
         MvcResult result = mockMvc.perform(get(url)).andExpect(status().isOk()).andDo(print()).andReturn();
 

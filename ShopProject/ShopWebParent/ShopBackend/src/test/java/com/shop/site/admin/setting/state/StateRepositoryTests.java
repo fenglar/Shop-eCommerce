@@ -31,9 +31,9 @@ public class StateRepositoryTests {
         Integer countryId = 1;
         Country country = entityManager.find(Country.class, countryId);
 
-//		State state = repo.save(new State("Karnataka", country));
-//		State state = repo.save(new State("Punjab", country));
-//		State state = repo.save(new State("Uttar Pradesh", country));
+		//State state = repo.save(new State("Karnataka", country));
+		//State state = repo.save(new State("Punjab", country));
+		//State state= repo.save(new State("Uttar Pradesh", country));
         State state = repo.save(new State("West Bengal", country));
 
         assertThat(state).isNotNull();
@@ -56,7 +56,7 @@ public class StateRepositoryTests {
 
     @Test
     public void testListStatesByCountry() {
-        Integer countryId = 2;
+        Integer countryId = 1;
         Country country = entityManager.find(Country.class, countryId);
         List<State> listStates = repo.findByCountryOrderByNameAsc(country);
 
