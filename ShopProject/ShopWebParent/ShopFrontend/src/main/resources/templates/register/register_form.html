@@ -129,7 +129,7 @@
         dataListState = $("#listStates");
         fieldState = $("#state")
 
-        dropDowenCountry.on("change", function () {
+        dropDownCountry.on("change", function () {
             loadStatesForCountry();
             fieldState.val("").focus();
         });
@@ -138,7 +138,7 @@
     function loadStatesForCountry() {
         selectedCountry = $("#country option:selected");
         countryId = selectedCountry.val()
-        url.contextPath+"settings/list_states_by_country/" + countryId;
+        url = contextPath+"settings/list_states_by_country/" + countryId;
 
         $.get(url, function(responseJSON){
             dataListState.empty();
