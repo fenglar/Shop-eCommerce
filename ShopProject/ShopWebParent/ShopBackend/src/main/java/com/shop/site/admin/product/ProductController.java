@@ -4,6 +4,8 @@ package com.shop.site.admin.product;
 import com.shop.site.admin.FileUploadUtil;
 import com.shop.site.admin.brand.BrandService;
 import com.shop.site.admin.category.CategoryService;
+import com.shop.site.admin.paging.PagingAndSortingHelper;
+import com.shop.site.admin.paging.PagingAndSortingParam;
 import com.shop.site.admin.security.ShopUserDetails;
 import com.shop.site.common.entity.Brand;
 import com.shop.site.common.entity.Category;
@@ -28,6 +30,8 @@ import java.util.List;
 @Controller
 public class ProductController {
 
+    private String defaultRedirectURL = "redirect:/products/page/1?sortField=name&sortDir=asc&categoryId=0";
+
     @Autowired
     private ProductService productService;
 
@@ -39,43 +43,20 @@ public class ProductController {
 
     @GetMapping("/products")
     public String listFirstPage(Model model) {
-        return listByPage(1, model, "name", "asc", null, 0);
+        return defaultRedirectURL;
     }
 
     @GetMapping("/products/page/{pageNum}")
-    public String listByPage(
-            @PathVariable(name = "pageNum") int pageNum, Model model,
-            @Param("sortField") String sortField, @Param("sortDir") String sortDir,
-            @Param("keyword") String keyword,
-            @Param("categoryId") Integer categoryId
-    ) {
-        Page<Product> page = productService.listByPage(pageNum, sortField, sortDir, keyword, categoryId);
-        List<Product> listProducts = page.getContent();
+    public String listByPage(@PagingAndSortingParam(listName = "listProducts", moduleURL = "/products")
+                                         PagingAndSortingHelper helper,
+                                         @PathVariable(name = "pageNum") int pageNum, Model model,
+            @Param("categoryId") Integer categoryId) {
+        productService.listByPage(pageNum, helper, categoryId);
 
         List<Category> listCategories = categoryService.listCategoriesUsedInForm();
 
-        long startCount = (pageNum - 1) * productService.PRODUCTS_PER_PAGE + 1;
-        long endCount = startCount + productService.PRODUCTS_PER_PAGE - 1;
-        if (endCount > page.getTotalElements()) {
-            endCount = page.getTotalElements();
-        }
-
-        String reverseSortDir = sortDir.equals("asc") ? "desc" : "asc";
-
         if (categoryId != null) model.addAttribute("categoryId", categoryId);
-
-        model.addAttribute("currentPage", pageNum);
-        model.addAttribute("totalPages", page.getTotalPages());
-        model.addAttribute("startCount", startCount);
-        model.addAttribute("endCount", endCount);
-        model.addAttribute("totalItems", page.getTotalElements());
-        model.addAttribute("sortField", sortField);
-        model.addAttribute("sortDir", sortDir);
-        model.addAttribute("reverseSortDir", reverseSortDir);
-        model.addAttribute("keyword", keyword);
-        model.addAttribute("listProducts", listProducts);
         model.addAttribute("listCategories", listCategories);
-        model.addAttribute("moduleURL", "/products");
 
         return "products/products";
     }
@@ -107,11 +88,12 @@ public class ProductController {
                               @RequestParam(name = "imageNames", required = false) String[] imageNames,
                               @AuthenticationPrincipal ShopUserDetails loggedUser)
             throws IOException {
-        if (loggedUser.hasRole("Salesperson")) {
-            productService.saveProductPrice(product);
-            ra.addFlashAttribute("message", "The product has been saved successfully.");
-
-            return "redirect:/products";
+        if (loggedUser.hasRole("Admin") && !loggedUser.hasRole("Editor")) {
+            if (loggedUser.hasRole("Salesperson")) {
+                productService.saveProductPrice(product);
+                ra.addFlashAttribute("message", "The product has been saved successfully.");
+                return defaultRedirectURL;
+            }
         }
 
         ProductSaveHelper.setMainImageName(mainImageMultipart, product);
@@ -127,7 +109,7 @@ public class ProductController {
 
         ra.addFlashAttribute("message", "The product has been saved successfully.");
 
-        return "redirect:/products";
+        return defaultRedirectURL;
     }
 
 
@@ -140,7 +122,7 @@ public class ProductController {
         String message = "The product ID " + id + "has been " + status;
         redirectAttributes.addFlashAttribute("message", message);
 
-        return "redirect:/products";
+        return defaultRedirectURL;
     }
 
     @GetMapping("/product/delete/{id}")
@@ -158,7 +140,7 @@ public class ProductController {
         } catch (ProductNotFoundException ex) {
             redirectAttributes.addFlashAttribute("message", ex.getMessage());
         }
-        return "redirect:/products";
+        return defaultRedirectURL;
     }
 
     @GetMapping("/products/edit/{id}")
@@ -177,7 +159,7 @@ public class ProductController {
             return "products/product_form";
         } catch (ProductNotFoundException ex) {
             ra.addAttribute("message", ex.getMessage());
-            return "redirect:/products";
+            return defaultRedirectURL;
         }
     }
 
@@ -192,7 +174,7 @@ public class ProductController {
 
         } catch (ProductNotFoundException ex) {
             ra.addAttribute("message", ex.getMessage());
-            return "redirect:/products";
+            return defaultRedirectURL;
         }
     }
 }

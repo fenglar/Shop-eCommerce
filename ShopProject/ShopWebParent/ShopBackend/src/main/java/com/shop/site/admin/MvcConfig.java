@@ -1,11 +1,14 @@
 package com.shop.site.admin;
 
+import com.shop.site.admin.paging.PagingAndSortingArgumentResolver;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 @Configuration
 public class MvcConfig implements WebMvcConfigurer {
@@ -22,9 +25,11 @@ public class MvcConfig implements WebMvcConfigurer {
         String absolutePath = path.toFile().getAbsolutePath();
         String logicalPath = pathPattern.replace("..", "") + "/**";
 
-
-
         registry.addResourceHandler(logicalPath).addResourceLocations("file:/" + absolutePath + "/");
+    }
 
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+        resolvers.add(new PagingAndSortingArgumentResolver());
     }
 }

@@ -1,6 +1,8 @@
 package com.shop.site.admin.user.controller;
 
 import com.shop.site.admin.FileUploadUtil;
+import com.shop.site.admin.paging.PagingAndSortingHelper;
+import com.shop.site.admin.paging.PagingAndSortingParam;
 import com.shop.site.admin.user.UserNotFoundException;
 import com.shop.site.admin.user.UserService;
 import com.shop.site.admin.user.export.UserCsvExporter;
@@ -28,45 +30,21 @@ import java.util.List;
 @Controller
 public class UserController {
 
+    private String defaultRedirectURL = "redirect:/users/page/1?sortField=firstName&sortDir=asc";
+
     @Autowired
     private UserService service;
 
     @GetMapping("/users")
-    public String listFirstPage(Model model) {
-
-        return listByPage(1, model, "firstName", "asc", null);
+    public String listFirstPage() {
+        return defaultRedirectURL;
     }
 
     @GetMapping("/users/page/{pageNum}")
-    public String listByPage(
-            @PathVariable(name = "pageNum") int pageNum, Model model,
-            @Param("sortField") String sortField, @Param("sortDir") String sortDir,
-            @Param("keyword") String keyword) {
-        System.out.println("Sort field: " + sortField);
-        System.out.println("Sort order: " + sortDir);
+    public String listByPage(@PagingAndSortingParam(listName = "listUsers", moduleURL = "/users") PagingAndSortingHelper helper,
+                             @PathVariable(name = "pageNum") int pageNum) {
 
-        Page<User> page = service.listByPage(pageNum, sortField, sortDir, keyword);
-        List<User> listUsers = page.getContent();
-
-        long startCount = (pageNum - 1) * UserService.USERS_PER_PAGE + 1;
-        long endCount = (startCount + UserService.USERS_PER_PAGE - 1);
-        if (endCount > page.getTotalElements()) {
-            endCount = page.getTotalElements();
-        }
-
-        String reverseSortDir = sortDir.equals("asc") ? "desc" : "asc";
-
-        model.addAttribute("currentPage", pageNum);
-        model.addAttribute("totalPages", page.getTotalPages());
-        model.addAttribute("startCount", startCount);
-        model.addAttribute("endCount", endCount);
-        model.addAttribute("totalItems", page.getTotalElements());
-        model.addAttribute("listUsers", listUsers);
-        model.addAttribute("sortField", sortField);
-        model.addAttribute("sortDir", sortDir);
-        model.addAttribute("reverseSortDir", reverseSortDir);
-        model.addAttribute("keyword", keyword);
-        model.addAttribute("moduleURL", "/users");
+        service.listByPage(pageNum, helper);
 
 
         return "users/users";
@@ -121,7 +99,7 @@ public class UserController {
             return "users/user_form";
         } catch (UserNotFoundException ex) {
             redirectAttributes.addFlashAttribute("message", ex.getMessage());
-            return "redirect:/users";
+            return defaultRedirectURL;
         }
 
     }
@@ -147,7 +125,7 @@ public class UserController {
         String message = "The user ID " + id + "has been " + status;
         redirectAttributes.addFlashAttribute("message", message);
 
-        return "redirect:/users";
+        return defaultRedirectURL;
     }
 
     @GetMapping("/users/export/csv")

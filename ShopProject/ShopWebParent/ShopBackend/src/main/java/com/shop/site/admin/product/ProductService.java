@@ -1,5 +1,6 @@
 package com.shop.site.admin.product;
 
+import com.shop.site.admin.paging.PagingAndSortingHelper;
 import com.shop.site.common.entity.Product;
 import com.shop.site.common.exception.ProductNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ import java.util.NoSuchElementException;
 @Service
 @Transactional
 public class ProductService {
-public static final int PRODUCTS_PER_PAGE = 5;
+    public static final int PRODUCTS_PER_PAGE = 5;
     @Autowired
     private ProductRepository repo;
 
@@ -26,27 +27,27 @@ public static final int PRODUCTS_PER_PAGE = 5;
     }
 
 
-    public Page<Product> listByPage(int pageNum, String sortField, String sortDir,
-                                    String keyword, Integer categoryId) {
-        Sort sort = Sort.by(sortField);
+    public void listByPage(int pageNum, PagingAndSortingHelper helper, Integer categoryId) {
+        Pageable pageable = helper.createPageable(PRODUCTS_PER_PAGE, pageNum);
+        String keyword = helper.getKeyword();
+        Page<Product> page = null;
 
-        sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
-
-        Pageable pageable = PageRequest.of(pageNum - 1, PRODUCTS_PER_PAGE, sort);
         if (keyword != null && !keyword.isEmpty()) {
-            if(categoryId != null && categoryId > 0){
-                String categoryIdMatch = "-" + String.valueOf(categoryId)+"-";
-                return repo.searchInCategory(categoryId,categoryIdMatch, keyword,pageable);
+            if (categoryId != null && categoryId > 0) {
+                String categoryIdMatch = "-" + String.valueOf(categoryId) + "-";
+                page = repo.searchInCategory(categoryId, categoryIdMatch, keyword, pageable);
+            } else {
+                page = repo.findAll(keyword, pageable);
             }
-            return repo.findAll(keyword, pageable);
+        } else {
+            if (categoryId != null && categoryId > 0) {
+                String categoryIdMatch = "-" + String.valueOf(categoryId) + "-";
+                page = repo.findAllInCategory(categoryId, categoryIdMatch, pageable);
+            } else {
+                page = repo.findAll(pageable);
+            }
         }
-
-        if(categoryId != null && categoryId > 0){
-            String categoryIdMatch = "-" + String.valueOf(categoryId)+"-";
-            return repo.findAllInCategory(categoryId,categoryIdMatch,pageable);
-        }
-
-        return repo.findAll(pageable);
+        helper.updateModelAttributes(pageNum, page);
     }
 
 
@@ -89,6 +90,7 @@ public static final int PRODUCTS_PER_PAGE = 5;
 
         return "OK";
     }
+
     public void updateProductEnabledStatus(Integer id, boolean enabled) {
 
         repo.updateEnabledStatus(id, enabled);
@@ -105,7 +107,7 @@ public static final int PRODUCTS_PER_PAGE = 5;
     public Product get(Integer id) throws ProductNotFoundException {
         try {
             return repo.findById(id).get();
-        } catch(NoSuchElementException ex) {
+        } catch (NoSuchElementException ex) {
             throw new ProductNotFoundException("Could not find any porduct with ID " + id);
         }
     }

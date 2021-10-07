@@ -2,6 +2,8 @@ package com.shop.site.admin.brand;
 
 import com.shop.site.admin.FileUploadUtil;
 import com.shop.site.admin.category.CategoryService;
+import com.shop.site.admin.paging.PagingAndSortingHelper;
+import com.shop.site.admin.paging.PagingAndSortingParam;
 import com.shop.site.common.entity.Brand;
 import com.shop.site.common.entity.Category;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,7 @@ import java.util.List;
 @Controller
 public class BrandController {
 
+    private String defaultRedirectURL = "redirect:/brands/page/1?sortField=name&sortDir=asc";
     @Autowired
     private BrandService brandService;
 
@@ -29,40 +32,16 @@ public class BrandController {
     private CategoryService categoryService;
 
     @GetMapping("/brands")
-    public String listAll(Model model) {
-        List<Brand> listBrands = brandService.listAll();
-        model.addAttribute("listBrands", listBrands);
-        return "brands/brands";
+    public String listFirstPage() {
+        return defaultRedirectURL;
+
     }
 
     @GetMapping("/brands/page/{pageNum}")
-    public String listByPage(
-            @PathVariable(name = "pageNum") int pageNum, Model model,
-            @Param("sortField") String sortField, @Param("sortDir") String sortDir,
-            @Param("keyword") String keyword
-    ) {
-        Page<Brand> page = brandService.listByPage(pageNum, sortField, sortDir, keyword);
-        List<Brand> listBrands = page.getContent();
-
-        long startCount = (pageNum - 1) * BrandService.BRANDS_PER_PAGE + 1;
-        long endCount = startCount + BrandService.BRANDS_PER_PAGE - 1;
-        if (endCount > page.getTotalElements()) {
-            endCount = page.getTotalElements();
-        }
-
-        String reverseSortDir = sortDir.equals("asc") ? "desc" : "asc";
-
-        model.addAttribute("currentPage", pageNum);
-        model.addAttribute("totalPages", page.getTotalPages());
-        model.addAttribute("startCount", startCount);
-        model.addAttribute("endCount", endCount);
-        model.addAttribute("totalItems", page.getTotalElements());
-        model.addAttribute("sortField", sortField);
-        model.addAttribute("sortDir", sortDir);
-        model.addAttribute("reverseSortDir", reverseSortDir);
-        model.addAttribute("keyword", keyword);
-        model.addAttribute("listBrands", listBrands);
-        model.addAttribute("moduleURL", "/brands");
+    public String listByPage(@PagingAndSortingParam(listName = "listBrands", moduleURL = "/brands")
+                                         PagingAndSortingHelper helper,
+                             @PathVariable(name = "pageNum") int pageNum) {
+        brandService.listByPage(pageNum, helper);
 
         return "brands/brands";
     }
@@ -77,10 +56,11 @@ public class BrandController {
 
         return "brands/brand_form";
     }
+
     @GetMapping("/brands/save")
     public String saveBrand(Brand brand, @RequestParam("fileImage") MultipartFile multipartFile,
                             RedirectAttributes ra) throws IOException {
-        if(!multipartFile.isEmpty()) {
+        if (!multipartFile.isEmpty()) {
             String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
             brand.setLogo(fileName);
 
@@ -88,16 +68,17 @@ public class BrandController {
             String uploadDir = "../brand-logos/" + savedBrand.getId();
 
             FileUploadUtil.cleanDir(uploadDir);
-            FileUploadUtil.saveFile(uploadDir, fileName,multipartFile);
+            FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
         } else {
             brandService.save(brand);
         }
         ra.addFlashAttribute("message", "The brand has been saved successfully.");
-        return "redirect:/brands";
+        return defaultRedirectURL;
 
     }
+
     @GetMapping("/brands/edit/{id}")
-    public String editBrand(@PathVariable(name="id") Integer id, Model model,
+    public String editBrand(@PathVariable(name = "id") Integer id, Model model,
                             RedirectAttributes ra) {
         try {
             Brand brand = brandService.get(id);
@@ -109,13 +90,13 @@ public class BrandController {
             return "brands/brand_form";
         } catch (BrandNotFoundException ex) {
             ra.addFlashAttribute("message", ex.getMessage());
-            return "redirect:/brands";
+            return defaultRedirectURL;
         }
     }
 
     @GetMapping("/brands/delete/{id}")
     public String deleteBrand(@PathVariable(name = "id") Integer id, Model model,
-                                 RedirectAttributes redirectAttributes) {
+                              RedirectAttributes redirectAttributes) {
         try {
             brandService.delete(id);
             String brandDir = "../brand-images/" + id;
@@ -125,7 +106,7 @@ public class BrandController {
         } catch (BrandNotFoundException ex) {
             redirectAttributes.addFlashAttribute("message", ex.getMessage());
         }
-        return "redirect:/brands";
+        return defaultRedirectURL;
 
     }
 
