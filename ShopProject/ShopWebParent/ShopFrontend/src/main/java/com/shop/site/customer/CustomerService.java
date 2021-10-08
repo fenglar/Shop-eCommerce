@@ -1,5 +1,6 @@
 package com.shop.site.customer;
 
+import com.shop.site.common.entity.AuthenticationType;
 import com.shop.site.common.entity.Country;
 import com.shop.site.common.entity.Customer;
 import com.shop.site.setting.CountryRepository;
@@ -48,13 +49,19 @@ public class CustomerService {
         customer.setPassword(encodedPassword);
     }
 
-    public boolean verify(String verificationCode){
-       Customer customer = customerRepo.findByVerificationCode(verificationCode);
-       if(customer == null || customer.isEnabled()) {
-           return false;
-       } else {
-           customerRepo.enable(customer.getId());
-           return true;
-       }
+    public boolean verify(String verificationCode) {
+        Customer customer = customerRepo.findByVerificationCode(verificationCode);
+        if (customer == null || customer.isEnabled()) {
+            return false;
+        } else {
+            customerRepo.enable(customer.getId());
+            return true;
+        }
+    }
+
+    public void updateAuthentication(Customer customer, AuthenticationType type) {
+        if (!customer.getAuthenticationType().equals(type)) {
+            customerRepo.updateAuthenticationType(customer.getId(), type);
+        }
     }
 }

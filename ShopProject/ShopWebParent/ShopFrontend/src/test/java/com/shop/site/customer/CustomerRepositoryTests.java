@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Date;
 import java.util.Optional;
 
+import com.shop.site.common.entity.AuthenticationType;
 import com.shop.site.common.entity.Country;
 import com.shop.site.common.entity.Customer;
 import org.junit.jupiter.api.Test;
@@ -16,14 +17,15 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.annotation.Rollback;
 
 
-
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Rollback(false)
 public class CustomerRepositoryTests {
 
-    @Autowired private CustomerRepository repo;
-    @Autowired private TestEntityManager entityManager;
+    @Autowired
+    private CustomerRepository repo;
+    @Autowired
+    private TestEntityManager entityManager;
 
     @Test
     public void testCreateCustomer1() {
@@ -140,5 +142,14 @@ public class CustomerRepositoryTests {
 
         Customer customer = repo.findById(customerId).get();
         assertThat(customer.isEnabled()).isTrue();
+    }
+
+    @Test
+    public void testUpdateAuthenticationType() {
+        Integer id = 1;
+        repo.updateAuthenticationType(id, AuthenticationType.DATABASE);
+
+        Customer customer = repo.findById(id).get();
+        assertThat(customer.getAuthenticationType()).isEqualTo(AuthenticationType.DATABASE);
     }
 }
