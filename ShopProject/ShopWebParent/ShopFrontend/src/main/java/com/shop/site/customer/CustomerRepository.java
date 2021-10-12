@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.List;
+
 public interface CustomerRepository extends CrudRepository<Customer, Integer> {
 
     @Query("SELECT c FROM Customer c WHERE c.email = ?1")
@@ -22,4 +24,6 @@ public interface CustomerRepository extends CrudRepository<Customer, Integer> {
     @Query("UPDATE Customer c SET c.authenticationType = ?2 WHERE c.id = ?1")
     @Modifying
     public void updateAuthenticationType(Integer customerId, AuthenticationType type);
+
+   public  Customer findByResetPasswordToken(String token);
 }
