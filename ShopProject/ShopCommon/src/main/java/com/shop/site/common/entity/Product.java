@@ -56,6 +56,10 @@ public class Product {
     public Product() {
     }
 
+    public Product(Integer id) {
+        this.id = id;
+    }
+
     public Product(Integer id, String name, String alias, String shortDescription, String fullDescription,
                    Date createdTime, Date updatedTime, boolean enabled, boolean inStock,
                    float cost, float price, float discountPercent, float length, float width, float height, float weight,
