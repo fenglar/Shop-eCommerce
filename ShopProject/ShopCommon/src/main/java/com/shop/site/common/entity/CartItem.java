@@ -2,6 +2,7 @@ package com.shop.site.common.entity;
 
 
 import javax.persistence.*;
+import javax.transaction.Transactional;
 
 @Entity
 @Table(name = "cart_items")
@@ -60,5 +61,9 @@ public class CartItem {
                 ", product=" + product.getShortName() +
                 ", quantity=" + quantity +
                 '}';
+    }
+    @Transient
+    public float getSubtotal(){
+        return product.getDiscountPercent() * quantity;
     }
 }
