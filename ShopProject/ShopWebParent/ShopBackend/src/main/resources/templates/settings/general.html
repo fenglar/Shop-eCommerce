@@ -74,23 +74,37 @@
         <div class="form-group row">
             <label class="col-sm-4 col-form-label">Decimal Digits :</label>
             <div class="col-sm-8">
-                <select name="THOUSANDS_POINT_TYPE" class="form-control">
+                <select name="DECIMAL_DIGITS" class="form-control">
                     <option value="0"
-                            th:selected="(${THOUSANDS_POINT_TYPE} == 0)">0
+                            th:selected="(${DECIMAL_DIGITS} == 0)">0
                     </option>
                     <option value="1"
-                            th:selected="(${THOUSANDS_POINT_TYPE} == 1)">1
+                            th:selected="(${DECIMAL_DIGITS} == 1)">1
                     </option>
                     <option value="2"
-                            th:selected="(${THOUSANDS_POINT_TYPE} == 2)">2
+                            th:selected="(${DECIMAL_DIGITS} == 2)">2
                     </option>
                     <option value="3"
-                            th:selected="(${THOUSANDS_POINT_TYPE} == 3)">3
+                            th:selected="(${DECIMAL_DIGITS} == 3)">3
                     </option>
                     <option value="4"
-                            th:selected="(${THOUSANDS_POINT_TYPE} == 4)">4
+                            th:selected="(${DECIMAL_DIGITS} == 4)">4
                     </option>
 
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-4 col-form-label">Thousands Point Type:</label>
+            <div class="col-sm-8">
+                <select name="THOUSANDS_POINT_TYPE" class="form-control">
+                    <option value="POINT"
+                            th:selected="(${THOUSANDS_POINT_TYPE} == 'POINT')">Point (.)
+                    </option>
+                    <option value="COMMA"
+                            th:selected="(${THOUSANDS_POINT_TYPE} == 'COMMA')">Comma (,)
+                    </option>
                 </select>
             </div>
         </div>
