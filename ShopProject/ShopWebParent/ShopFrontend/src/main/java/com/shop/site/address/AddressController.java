@@ -20,17 +20,19 @@ import java.util.List;
 @Controller
 public class AddressController {
 
-    @Autowired private AddressService addressService;
-    @Autowired private CustomerService customerService;
+    @Autowired
+    private AddressService addressService;
+    @Autowired
+    private CustomerService customerService;
 
     @GetMapping("/address_book")
-    public String showAddressBook(Model model, HttpServletRequest request){
+    public String showAddressBook(Model model, HttpServletRequest request) {
         Customer customer = getAuthenticatedCustomer(request);
         List<Address> listAddresses = addressService.listAddressBook(customer);
 
         boolean usePrimaryAddressAsDefault = true;
-        for (Address address : listAddresses){
-            if (address.isDefaultForShipping()){
+        for (Address address : listAddresses) {
+            if (address.isDefaultForShipping()) {
                 usePrimaryAddressAsDefault = false;
                 break;
             }
@@ -94,6 +96,16 @@ public class AddressController {
         addressService.delete(addressId, customer.getId());
 
         ra.addFlashAttribute("message", "The address ID " + addressId + " has been deleted.");
+
+        return "redirect:/address_book";
+    }
+
+    @GetMapping("/address_book/default/{id}")
+    public String setDefaultAddress(@PathVariable("id") Integer addressId, RedirectAttributes ra,
+                                    HttpServletRequest request) {
+        Customer customer = getAuthenticatedCustomer(request);
+
+        addressService.setDefaultAddress(addressId, customer.getId());
 
         return "redirect:/address_book";
     }
