@@ -29,7 +29,7 @@ public class Customer {
     private String state;
     @Column(name = "postal_code", nullable = false, length = 10)
     private String postalCode;
-    @Column(name= "verificationCode", length = 64)
+    @Column(name = "verificationCode", length = 64)
     private String verificationCode;
 
     private boolean enabled;
@@ -191,6 +191,35 @@ public class Customer {
         this.resetPasswordToken = resetPasswordToken;
     }
 
+
+    @Transient
+    public String getAddress() {
+        String address = firstName;
+        if (lastName != null && !lastName.isEmpty())
+            address += " " + lastName;
+
+        if (!addressLine1.isEmpty())
+            address += ", " + addressLine1;
+
+        if (addressLine2 != null && !addressLine2.isEmpty())
+            address += " " + addressLine2;
+
+        if (!city.isEmpty())
+            address += ", " + city;
+
+        if (state != null && !state.isEmpty())
+            address += ", " + state;
+
+        address += ", " + country.getName();
+
+        if (!postalCode.isEmpty())
+            address += ". Postal Code: " + postalCode;
+       if (!phoneNumber.isEmpty())
+            address += ". Phone Number: " + phoneNumber;
+
+        return address;
+    }
+
     @Override
     public String toString() {
         return "Customer{" +
@@ -200,7 +229,8 @@ public class Customer {
                 ", lastName='" + lastName + '\'' +
                 '}';
     }
-    public String getFullName(){
+
+    public String getFullName() {
         return firstName + " " + lastName;
     }
 
