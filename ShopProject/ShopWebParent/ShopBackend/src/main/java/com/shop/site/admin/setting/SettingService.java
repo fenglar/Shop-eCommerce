@@ -1,11 +1,10 @@
 package com.shop.site.admin.setting;
 
-import com.shop.site.common.entity.Setting;
-import com.shop.site.common.entity.SettingCategory;
+import com.shop.site.common.entity.setting.Setting;
+import com.shop.site.common.entity.setting.SettingCategory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.StyledEditorKit;
 import java.util.ArrayList;
 import java.util.List;
 

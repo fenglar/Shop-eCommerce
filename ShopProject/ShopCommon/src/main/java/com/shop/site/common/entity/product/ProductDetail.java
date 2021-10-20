@@ -1,14 +1,14 @@
-package com.shop.site.common.entity;
+package com.shop.site.common.entity.product;
 
+
+import com.shop.site.common.entity.IdBasedEntity;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name="product_details")
-public class ProductDetail {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class ProductDetail extends IdBasedEntity {
+
     @Column(nullable = false, length = 256)
     private String name;
     @Column(nullable = false, length = 256)
@@ -35,13 +35,6 @@ public class ProductDetail {
         this.product=product;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

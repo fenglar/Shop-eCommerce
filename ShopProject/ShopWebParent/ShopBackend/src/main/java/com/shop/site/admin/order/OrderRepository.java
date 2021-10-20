@@ -1,12 +1,10 @@
 package com.shop.site.admin.order;
 
 import com.shop.site.admin.paging.SearchRepository;
-import com.shop.site.common.entity.Customer;
-import com.shop.site.common.entity.Order;
+import com.shop.site.common.entity.order.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
 
 public interface OrderRepository extends SearchRepository<Order, Integer> {
     @Query("SELECT o FROM Order o WHERE o.firstName LIKE %?1% OR o.lastName LIKE %?1% OR" +

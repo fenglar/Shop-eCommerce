@@ -1,6 +1,6 @@
 package com.shop.site.setting;
 
-import com.shop.site.common.entity.Setting;
+import com.shop.site.common.entity.setting.Setting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

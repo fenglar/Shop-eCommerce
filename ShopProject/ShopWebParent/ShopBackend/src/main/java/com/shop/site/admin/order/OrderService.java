@@ -1,9 +1,7 @@
 package com.shop.site.admin.order;
 
-import com.shop.site.admin.category.CategoryPageInfo;
 import com.shop.site.admin.paging.PagingAndSortingHelper;
-import com.shop.site.common.entity.Category;
-import com.shop.site.common.entity.Order;
+import com.shop.site.common.entity.order.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,7 +10,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service

@@ -1,14 +1,16 @@
-package com.shop.site.common.entity;
+package com.shop.site.common.entity.product;
+
+import com.shop.site.common.entity.Brand;
+import com.shop.site.common.entity.Category;
+import com.shop.site.common.entity.IdBasedEntity;
 
 import javax.persistence.*;
 import java.util.*;
 
 @Entity
 @Table(name = "products")
-public class Product {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class Product extends IdBasedEntity {
+
     @Column(nullable = false, length = 256, unique = true)
     private String name;
     @Column(nullable = false, length = 256, unique = true)
@@ -84,13 +86,7 @@ public class Product {
         this.brand = brand;
     }
 
-    public Integer getId() {
-        return id;
-    }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

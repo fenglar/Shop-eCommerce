@@ -1,8 +1,8 @@
 package com.shop.site.admin.product;
 
 import com.shop.site.admin.FileUploadUtil;
-import com.shop.site.common.entity.Product;
-import com.shop.site.common.entity.ProductImage;
+import com.shop.site.common.entity.product.Product;
+import com.shop.site.common.entity.product.ProductImage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;

@@ -1,4 +1,4 @@
-package com.shop.site.common.entity;
+package com.shop.site.common.entity.setting;
 
 import javax.persistence.*;
 import java.util.Objects;

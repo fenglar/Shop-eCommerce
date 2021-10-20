@@ -1,15 +1,14 @@
 package com.shop.site.common.entity;
 
 
+import com.shop.site.common.entity.product.Product;
+
 import javax.persistence.*;
-import javax.transaction.Transactional;
 
 @Entity
 @Table(name = "cart_items")
-public class CartItem {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class CartItem extends IdBasedEntity {
+
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
@@ -21,13 +20,6 @@ public class CartItem {
     public CartItem() {
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public Customer getCustomer() {
         return customer;

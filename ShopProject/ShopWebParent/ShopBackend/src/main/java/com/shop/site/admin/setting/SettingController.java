@@ -2,20 +2,17 @@ package com.shop.site.admin.setting;
 
 import com.shop.site.admin.FileUploadUtil;
 import com.shop.site.common.entity.Currency;
-import com.shop.site.common.entity.Setting;
-import org.apache.poi.util.StringUtil;
+import com.shop.site.common.entity.setting.Setting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;

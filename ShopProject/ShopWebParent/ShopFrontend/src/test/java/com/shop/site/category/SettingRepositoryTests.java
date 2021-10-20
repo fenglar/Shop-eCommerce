@@ -1,8 +1,8 @@
 package com.shop.site.category;
 
 
-import com.shop.site.common.entity.Setting;
-import com.shop.site.common.entity.SettingCategory;
+import com.shop.site.common.entity.setting.Setting;
+import com.shop.site.common.entity.setting.SettingCategory;
 import com.shop.site.setting.SettingRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

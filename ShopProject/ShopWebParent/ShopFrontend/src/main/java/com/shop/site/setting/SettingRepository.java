@@ -1,7 +1,7 @@
 package com.shop.site.setting;
 
-import com.shop.site.common.entity.Setting;
-import com.shop.site.common.entity.SettingCategory;
+import com.shop.site.common.entity.setting.Setting;
+import com.shop.site.common.entity.setting.SettingCategory;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
