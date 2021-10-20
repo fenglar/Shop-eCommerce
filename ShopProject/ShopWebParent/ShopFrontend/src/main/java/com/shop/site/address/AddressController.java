@@ -107,7 +107,13 @@ public class AddressController {
 
         addressService.setDefaultAddress(addressId, customer.getId());
 
-        return "redirect:/address_book";
+        String redirectOption = request.getParameter("redirect");
+        String redirectURL = "redirect:/address_book";
+
+        if  ("cart".equals(redirectOption)){
+            redirectURL = "redirect:/cart";
+        }
+        return redirectURL;
     }
 
 }
