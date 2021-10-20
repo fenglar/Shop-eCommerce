@@ -15,4 +15,6 @@ public interface OrderRepository extends SearchRepository<Order, Integer> {
             "OR o.customer.firstName LIKE %?1% OR o.customer.lastName LIKE %?1%")
     public Page<Order> findAll(String keyword, Pageable pageable);
 
+    public Long countById(Integer id);
+
 }
