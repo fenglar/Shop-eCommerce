@@ -1,6 +1,7 @@
 package com.shop.site.common.entity.order;
 
 import com.shop.site.common.entity.AbstractAddress;
+import com.shop.site.common.entity.Address;
 import com.shop.site.common.entity.Customer;
 import com.shop.site.common.entity.IdBasedEntity;
 
@@ -34,7 +35,7 @@ public class Order extends AbstractAddress {
     private OrderStatus status;
 
     @ManyToOne
-    @JoinColumn(name="customer_id")
+    @JoinColumn(name = "customer_id")
     private Customer customer;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
@@ -145,7 +146,7 @@ public class Order extends AbstractAddress {
         this.orderDetails = orderDetails;
     }
 
-    public void copyAddressCustomer(){
+    public void copyAddressCustomer() {
         setOrderTime(new Date());
         setCustomer(customer);
         setFirstName(customer.getFirstName());
@@ -172,10 +173,22 @@ public class Order extends AbstractAddress {
 
     @Transient
     public String getDestination() {
-        String destination =  city + ", ";
+        String destination = city + ", ";
         if (state != null && !state.isEmpty()) destination += state + ", ";
         destination += country;
 
         return destination;
+    }
+
+    public void copyShippingAddress(Address address) {
+        setFirstName(address.getFirstName());
+        setLastName(address.getLastName());
+        setPhoneNumber(address.getPhoneNumber());
+        setAddressLine1(address.getAddressLine1());
+        setAddressLine2(address.getAddressLine2());
+        setCity(address.getCity());
+        setCountry(address.getCountry().getName());
+        setPostalCode(address.getPostalCode());
+        setState(address.getState());
     }
 }
