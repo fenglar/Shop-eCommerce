@@ -99,7 +99,6 @@ public class CustomerController {
     }
 
 
-
     @PostMapping("/update_account_details")
     public String updateAccountDetails(Model model, Customer customer, RedirectAttributes ra, HttpServletRequest request) {
         customerService.update(customer);
@@ -111,8 +110,10 @@ public class CustomerController {
 
         if ("address_book".equals(redirectOption)) {
             redirectURL = "redirect:/address_book";
-        } else if ("cart".equals(redirectOption)){
+        } else if ("cart".equals(redirectOption)) {
             redirectURL = "redirect:/cart";
+        } else if ("checkout".equals(redirectOption)) {
+            redirectURL = "redirect:/address_book?redirect=checkout";
         }
 
         return redirectURL;
@@ -142,7 +143,7 @@ public class CustomerController {
         if (principal instanceof UsernamePasswordAuthenticationToken) {
             UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
             userDetails = (CustomerUserDetails) token.getPrincipal();
-        } else if (principal instanceof RememberMeAuthenticationToken){
+        } else if (principal instanceof RememberMeAuthenticationToken) {
             RememberMeAuthenticationToken token = (RememberMeAuthenticationToken) principal;
             userDetails = (CustomerUserDetails) token.getPrincipal();
 
