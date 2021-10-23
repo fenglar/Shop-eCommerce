@@ -44,6 +44,10 @@
                         </form>
                     </div>
                     <div id="paypal-button-container"></div>
+                    <form th:action="@{process_paypal_order}" method="post" id="paypalForm" >
+                        <input type="hidden" name="orderId" id="orderId" />
+                        <input type="hidden" name="paymentMethod" value="PAYPAL" />
+                    </form>
                 </div>
             </div>
         </div>
@@ -118,6 +122,11 @@
             $("#buttonSubmit").removeClass("d-none");
         });
     });
+    function validateOrder(orderId){
+        $("#orderId").val(orderId);
+        $("#paypalForm").submit();
+
+    }
 
     paypal.Buttons({
         enableStandardCardFields: true,
@@ -160,9 +169,9 @@
         },
         onApprove: function (data, actions) {
             return actions.order.capture().then(function (details) {
-                console.log(details);
+              //  console.log(details);
                 orderId = details.id;
-                totalAmount = details.purchase_units[0].amount.value;
+                validateOrder(orderId);
             });
         }
         ,

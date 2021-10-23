@@ -2,6 +2,8 @@ package com.shop.site.checkout;
 
 import com.shop.site.Utility;
 import com.shop.site.address.AddressService;
+import com.shop.site.checkout.paypal.PayPalApiException;
+import com.shop.site.checkout.paypal.PayPalService;
 import com.shop.site.common.entity.Address;
 import com.shop.site.common.entity.CartItem;
 import com.shop.site.common.entity.Customer;
@@ -51,6 +53,8 @@ public class CheckoutController {
     private OrderService orderService;
     @Autowired
     private SettingService settingService;
+    @Autowired
+    private PayPalService payPalService;
 
     @GetMapping("/checkout")
     public String showCheckoutPage(Model model, HttpServletRequest request) {
@@ -149,8 +153,28 @@ public class CheckoutController {
 
         helper.setText(content, true);
         mailSender.send(message);
+    }
 
+    @PostMapping("/process_paypal_order")
+    public String processPayPalOrder(HttpServletRequest request, Model model)
+            throws MessagingException, UnsupportedEncodingException {
+        String orderId = request.getParameter("orderId");
+        String pageTitle = "Checkout Failure";
+        String message = null;
 
+        try {
+            if (payPalService.validateOrder(orderId)) {
+                return placeOrder(request);
+            } else {
+                pageTitle = "Checkout Failure";
+                message = "ERROR: Transaction could not be completed because order information is invalid";
+            }
+        } catch (PayPalApiException e) {
+            message = "ERROR: Transaction failed due to error: "+ e.getMessage();
+        }
+        model.addAttribute("pageTitle", pageTitle);
+        model.addAttribute("message", message);
+        return "message";
     }
 
 }
