@@ -6,9 +6,7 @@ import com.shop.site.common.entity.Customer;
 import com.shop.site.common.entity.IdBasedEntity;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "orders")
@@ -41,6 +39,9 @@ public class Order extends AbstractAddress {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private Set<OrderDetail> orderDetails = new HashSet<>();
 
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @OrderBy("updatedTime ASC")
+    private List<OrderTrack> orderTracks = new ArrayList<>();
 
     public String getCountry() {
         return country;
@@ -146,6 +147,14 @@ public class Order extends AbstractAddress {
         this.orderDetails = orderDetails;
     }
 
+    public List<OrderTrack> getOrderTracks() {
+        return orderTracks;
+    }
+
+    public void setOrderTracks(List<OrderTrack> orderTracks) {
+        this.orderTracks = orderTracks;
+    }
+
     public void copyAddressCustomer() {
         setOrderTime(new Date());
         setCustomer(customer);
@@ -191,6 +200,7 @@ public class Order extends AbstractAddress {
         setPostalCode(address.getPostalCode());
         setState(address.getState());
     }
+
     @Transient
     public String getShippingAddress() {
         String address = firstName;

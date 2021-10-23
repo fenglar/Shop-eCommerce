@@ -1,10 +1,7 @@
 package com.shop.site.admin.order;
 
 import com.shop.site.common.entity.*;
-import com.shop.site.common.entity.order.Order;
-import com.shop.site.common.entity.order.OrderDetail;
-import com.shop.site.common.entity.order.OrderStatus;
-import com.shop.site.common.entity.order.PaymentMethod;
+import com.shop.site.common.entity.order.*;
 import com.shop.site.common.entity.product.Product;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.annotation.Rollback;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -63,6 +61,7 @@ public class OrderRepositoryTests {
         assertThat(savedOrder.getId()).isGreaterThan(0);
 
     }
+
     @Test
     public void testAddNewOrderWithMultipleProducts() {
         Customer customer = entityManager.find(Customer.class, 2);
@@ -89,16 +88,16 @@ public class OrderRepositoryTests {
         orderDetail2.setProductCost(product1.getCost());
         orderDetail2.setShippingCost(20);
         orderDetail2.setQuantity(2);
-        orderDetail2.setSubtotal(product2.getPrice()*2);
+        orderDetail2.setSubtotal(product2.getPrice() * 2);
         orderDetail2.setUnitPrice(product2.getPrice());
 
         mainOrder.getOrderDetails().add(orderDetail1);
         mainOrder.getOrderDetails().add(orderDetail2);
 
         mainOrder.setShippingCost(30);
-        mainOrder.setProductCost(product1.getCost()+product2.getCost());
+        mainOrder.setProductCost(product1.getCost() + product2.getCost());
         mainOrder.setTax(0);
-        float subtotal = product1.getPrice()+product2.getPrice()*2;
+        float subtotal = product1.getPrice() + product2.getPrice() * 2;
         mainOrder.setSubtotal(subtotal);
         mainOrder.setTotal(subtotal + 30);
 
@@ -110,16 +109,17 @@ public class OrderRepositoryTests {
         Order savedOrder = repo.save(mainOrder);
         assertThat(savedOrder.getId()).isGreaterThan(0);
     }
+
     @Test
-    public void testlistOrders(){
-        Iterable<Order> orders= repo.findAll();
+    public void testlistOrders() {
+        Iterable<Order> orders = repo.findAll();
         assertThat(orders).isNotNull();
 
         orders.forEach(System.out::println);
     }
 
     @Test
-    public void testUpdateOrder(){
+    public void testUpdateOrder() {
         Integer orderId = 2;
         Order order = repo.findById(orderId).get();
 
@@ -135,18 +135,44 @@ public class OrderRepositoryTests {
     }
 
     @Test
-    public void testGetOrder(){
+    public void testGetOrder() {
         Integer orderId = 2;
         Order order = repo.findById(orderId).get();
         assertThat(order).isNotNull();
         System.out.println(order);
     }
+
     @Test
-    public void testDeleteOrder(){
+    public void testDeleteOrder() {
         Integer orderId = 3;
         repo.deleteById(orderId);
 
         Optional<Order> result = repo.findById(orderId);
-                assertThat(result).isNotPresent();
+        assertThat(result).isNotPresent();
+    }
+
+    @Test
+    public void testUpdateOrderTracks() {
+        Integer orderId = 2;
+        Order order = repo.findById(orderId).get();
+
+        OrderTrack newTrack = new OrderTrack();
+        newTrack.setOrder(order);
+        newTrack.setUpdatedTime(new Date());
+        newTrack.setStatus(OrderStatus.NEW);
+        newTrack.setNotes(OrderStatus.NEW.defaultDescription());
+
+        OrderTrack processingTrack = new OrderTrack();
+        processingTrack.setOrder(order);
+        processingTrack.setUpdatedTime(new Date());
+        processingTrack.setStatus(OrderStatus.PROCESSING);
+        processingTrack.setNotes(OrderStatus.PROCESSING.defaultDescription());
+
+        List<OrderTrack> orderTracks = order.getOrderTracks();
+        orderTracks.add(newTrack);
+        orderTracks.add(processingTrack);
+
+        Order updatedOrder = repo.save(order);
+        assertThat(updatedOrder.getOrderTracks()).isNotNull();
     }
 }
