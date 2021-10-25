@@ -1,9 +1,11 @@
 package com.shop.site.admin.shippingrate;
 
 import com.shop.site.admin.paging.PagingAndSortingHelper;
+import com.shop.site.admin.product.ProductRepository;
 import com.shop.site.admin.setting.country.CountryRepository;
 import com.shop.site.common.entity.Country;
 import com.shop.site.common.entity.ShippingRate;
+import com.shop.site.common.entity.product.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +17,11 @@ import java.util.NoSuchElementException;
 @Transactional
 public class ShippingRateService {
     public static final int RATES_PER_PAGE = 10;
-
+    public static final int DIM_DIVISOR = 139;
     @Autowired
     private ShippingRateRepository shipRepo;
     @Autowired private CountryRepository countryRepo;
+    @Autowired private ProductRepository productRepo;
 
     public void listByPage(int pageNum, PagingAndSortingHelper helper) {
         helper.listEntities(pageNum, RATES_PER_PAGE, shipRepo);
@@ -65,5 +68,18 @@ public class ShippingRateService {
 
         }
         shipRepo.deleteById(id);
+    }
+    public float calculateShippingCost(Integer productId, Integer countryId, String state) throws ShippingRateNotFoundException {
+        ShippingRate shippingRate = shipRepo.findByCountryAndState(countryId, state);
+        if(shippingRate == null){
+            throw new ShippingRateNotFoundException("No shipping rate found for the given destination." +
+                    " You have to enter shipping cost manually.");
+        }
+        Product product = productRepo.findById(productId).get();
+
+        float dimWeight = (product.getLength()*product.getWidth()*product.getHeight())/ DIM_DIVISOR;
+        float finalWeight = product.getWeight() > dimWeight ? product.getWeight() : dimWeight;
+
+        return finalWeight*shippingRate.getRate();
     }
 }
