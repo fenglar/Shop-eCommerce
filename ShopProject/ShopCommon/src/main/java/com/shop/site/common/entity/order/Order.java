@@ -6,6 +6,8 @@ import com.shop.site.common.entity.Customer;
 import com.shop.site.common.entity.IdBasedEntity;
 
 import javax.persistence.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Entity
@@ -228,4 +230,11 @@ public class Order extends AbstractAddress {
 
         return address;
     }
+
+    @Transient
+    public String getDeliverDateOnForm() {
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+        return dateFormatter.format(this.deliverDate);
+    }
+
 }
