@@ -48,11 +48,14 @@ function getProductInfo(productId, shippingCost) {
     $.get(requestUrl, function (productJson) {
         console.log(productJson);
         productName = productJson.name;
-        mainImagePath = contextPath.substring(0,contextPath.length - 1) + productJson.imagePath;
-        productCost=$.number(productJson.cost,2);
-        productPrice=$.number(productJson.price,2);
+        mainImagePath = contextPath.substring(0, contextPath.length - 1) + productJson.imagePath;
+        productCost = $.number(productJson.cost, 2);
+        productPrice = $.number(productJson.price, 2);
 
         htmlCode = generateProductCode(productId, productName, mainImagePath, productCost, productPrice, shippingCost);
+    $("#productList").append(htmlCode);
+    updateOrderAmounts();
+
     }).fail(function (err) {
         showWarningModal(err.responseJSON.message);
     });
@@ -60,15 +63,19 @@ function getProductInfo(productId, shippingCost) {
 
 function generateProductCode(productId, productName, mainImagePath, productCost, productPrice, shippingCost) {
     nextCount = $(".hiddenProductId").length + 1;
+    rowId="row"+nextCount;
     quantityId = "quantity" + nextCount;
     priceId = "price" + nextCount;
     subtotalId = "subtotal" + nextCount;
+    blankLineId ="blankLine" +nextCount;
     htmlCode = `
-          <div class="border-rounded p-1" >
-            <input type="hidden" name="productId" th:value="${productId}" class="hiddenProductId" />
+          <div class="border-rounded p-1" id="${rowId}">
+            <input type="hidden" name="productId" value="${productId}" class="hiddenProductId" />
             <div class="row">
                 <div class="col-1">
-                    <div>${nextCount}</div>
+                    <div class="divCount">${nextCount}</div>
+                      <div><a class="fas fa-trash icon-dark linkRemove" href="" rowNumber="${nextCount}"></a></div>
+
                 </div>
                 <div class="col-3">
                     <img src="@{${mainImagePath}}" class="img-fluid"/>
@@ -123,6 +130,7 @@ function generateProductCode(productId, productName, mainImagePath, productCost,
                 </table>
             </div>
         </div>
+        <div id="${blankLineId}" class="row">&nbsp;</div>
     `;
     return htmlCode;
 }
