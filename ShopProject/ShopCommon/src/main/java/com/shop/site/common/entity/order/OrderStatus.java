@@ -50,7 +50,7 @@ public enum OrderStatus {
     }, REFUNDED {
         @Override
         public String defaultDescription() {
-            return "Customer has been refunded";
+            return  "refunded";
         }
     };
     public abstract String defaultDescription();
