@@ -53,7 +53,7 @@ public class EmailSettingBag extends SettingBag {
     }
 
     public String getOrderConfirmationContent() {
-        return super.getValue("ORDER_CONFIRMATION_SUBJECT");
+        return super.getValue("ORDER_CONFIRMATION_CONTENT");
     }
 
 }

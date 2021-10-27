@@ -40,7 +40,7 @@ public class SettingService {
 
     public String getCurrencyCode() {
         Setting setting = settingRepo.findByKey("CURRENCY_ID");
-        Integer currencyId = Integer.parseInt(getCurrencyCode());
+        Integer currencyId = Integer.parseInt(setting.getValue());
         Currency currency = currencyRepo.findById(currencyId).get();
 
         return currency.getCode();

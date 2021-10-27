@@ -90,7 +90,7 @@ public class SettingController {
 
         ra.addFlashAttribute("message", "Mail server settings have been saved");
 
-        return "redirect:/settings";
+        return "redirect:/settings#mailServer";
 
     }
 
@@ -101,7 +101,7 @@ public class SettingController {
 
         ra.addFlashAttribute("message", "Mail template settings have been saved");
 
-        return "redirect:/settings";
+        return "redirect:/settings#mailTemplates";
 
     }
 

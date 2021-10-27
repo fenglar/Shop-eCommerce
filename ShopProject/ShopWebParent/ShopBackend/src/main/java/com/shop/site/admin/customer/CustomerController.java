@@ -46,7 +46,7 @@ public class CustomerController {
                                               @PathVariable("status") boolean enabled, RedirectAttributes redirectAttributes) {
         service.updateCustomerEnabledStatus(id, enabled);
         String status = enabled ? "enabled" : "disabled";
-        String message = "The category ID " + id + "has been " + status;
+        String message = "The customer ID " + id + " has been " + status;
         redirectAttributes.addFlashAttribute("message", message);
 
         return defaultRedirectURL;
@@ -56,13 +56,26 @@ public class CustomerController {
     public String viewCustomer(@PathVariable("id") Integer id, Model model, RedirectAttributes ra) {
         try {
             Customer customer = service.get(id);
+            model.addAttribute("customer", customer);
+
+            return "customers/customer_detail_modal";
+        } catch (CustomerNotFoundException ex) {
+            ra.addFlashAttribute("message", ex.getMessage());
+            return defaultRedirectURL;
+        }
+    }
+
+    @GetMapping("/customers/edit/{id}")
+    public String editCustomer(@PathVariable("id") Integer id, Model model, RedirectAttributes ra) {
+        try {
+            Customer customer = service.get(id);
             List<Country> countries = service.listAllCountries();
 
             model.addAttribute("listCountries", countries);
             model.addAttribute("customer", customer);
             model.addAttribute("pageTitle", String.format("Edit Customer(ID: %d)", id));
 
-            return defaultRedirectURL;
+            return "customers/customer_form";
         } catch (CustomerNotFoundException ex) {
             ra.addFlashAttribute("message", ex.getMessage());
             return defaultRedirectURL;

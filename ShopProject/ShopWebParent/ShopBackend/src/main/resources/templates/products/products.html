@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
-<head th:replace="fragments :: page_head(${'Products - Shopme Admin'}, 'none')"/>
+<head th:replace="fragments :: page_head('Products - Shopme Admin', 'none')"/>
 
 <body>
 <div class="container-fluid">
@@ -42,20 +42,23 @@
     </div>
 
     <div class="full-details">
-        <table
-                class="table table-bordered table-striped table-hover table-responsive-xl">
+        <table class="table table-bordered table-striped table-hover table-responsive-xl">
             <thead class="thead-dark">
             <tr>
                 <th class="hideable-column">
-                <th th:replace="fragments :: column_link('id', 'ID', 'none')"/>
+                <th th:replace="fragments :: column_link('id', 'ID', 'tag')" />
                 </th>
+
                 <th>Main Image</th>
+
                 <th th:replace="fragments :: column_link('name', 'Product Name', 'none')"/>
+
                 <th class="hideable-column">
-                <th th:replace="fragments :: column_link('brand', 'Brand', 'none')"/>
+                <th th:replace="fragments :: column_link('brand', 'Brand', 'tag')" />
                 </th>
+
                 <th class="hideable-column">
-                <th th:replace="fragments :: column_link('category', 'Category', 'none')"/>
+                <th th:replace="fragments :: column_link('category', 'Category', 'tag')" />
                 </th>
 
                 <th:block sec:authorize="hasAnyAuthority('Admin', 'Editor')">
@@ -88,8 +91,8 @@
                        th:href="@{'/products/detail/'+${product.id}}"
                        title="View details of product"></a>
                     <th:block sec:authorize="hasAnyAuthority('Admin', 'Editor', 'Salesperson')">
-                    &nbsp;
-                    <div th:replace="fragments :: edit('product', '/products/edit/'+${product.id})"/>
+                        &nbsp;
+                        <div th:replace="fragments :: edit('product', '/products/edit/'+${product.id})"/>
                     </th:block>
                     &nbsp;
                     <th:block sec:authorize="hasAnyAuthority('Admin', 'Editor')">
@@ -105,7 +108,7 @@
     <div class="less-details">
         <div th:each="product : ${listProducts}" class="row m-1">
             <div class="col-4">
-                <img th:src="@{${product.mainImagePath}}" style="width: 80px" class="img-fluid" />
+                <img th:src="@{${product.mainImagePath}}" style="width: 80px" class="img-fluid"/>
             </div>
             <div class="col-8">
                 <div>
@@ -118,12 +121,12 @@
 
                     <th:block sec:authorize="hasAnyAuthority('Admin', 'Editor', 'Salesperson')">
                         &nbsp;
-                        <div th:replace="fragments :: edit('product', '/products/edit/' + ${product.id})" />
+                        <div th:replace="fragments :: edit('product', '/products/edit/' + ${product.id})"/>
                     </th:block>
 
                     <th:block sec:authorize="hasAnyAuthority('Admin', 'Editor')">
                         &nbsp;
-                        <div th:replace="fragments :: delete('product', ${product.id}, '/products/delete/' + ${product.id}, true)" />
+                        <div th:replace="fragments :: delete('product', ${product.id}, '/products/delete/' + ${product.id}, true)"/>
                     </th:block>
                 </div>
             </div>
