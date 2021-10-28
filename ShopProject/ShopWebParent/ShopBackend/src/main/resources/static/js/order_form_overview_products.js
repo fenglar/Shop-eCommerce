@@ -58,7 +58,7 @@ function updateOrderAmounts() {
     });
     setAndFormatNumberForField("shippingCost", shippingCost);
 
-    tax=getNumberValueRemovedThousandSeparator(fieldTax);
+    tax = getNumberValueRemovedThousandSeparator(fieldTax);
     orderTotal = orderSubtotal + tax + shippingCost;
     setAndFormatNumberForField("total", orderTotal);
 }
@@ -120,4 +120,35 @@ function formatOrderAmounts() {
 
 function formatNumberForField(fieldRef) {
     fieldRef.val($.number(fieldRef.val(), 2));
+}
+
+function processFormBeforeSubmit() {
+    setCountryName();
+    removeThousandSeparatorForField(fieldProductCost);
+    removeThousandSeparatorForField(fieldSubtotal);
+    removeThousandSeparatorForField(fieldShippingCost);
+    removeThousandSeparatorForField(fieldTax);
+    removeThousandSeparatorForField(fieldTotal);
+
+    $(".cost-input").each(function (e) {
+        removeThousandSeparatorForField($(this));
+    });
+    $(".price-input").each(function (e) {
+        removeThousandSeparatorForField($(this));
+    });
+    $(".subtotal-output").each(function (e) {
+        removeThousandSeparatorForField($(this));
+    });
+    $(".ship-input").each(function (e) {
+        removeThousandSeparatorForField($(this));
+    });
+}
+
+function removeThousandSeparatorForField(fieldRef) {
+    fieldRef.val(fieldRef.val().replace(",", ""));
+}
+function setCountryName(){
+    selectedCountry = $("#country option:selected");
+    countryName = selectedCountry.text();
+    $("#countryName").val(countryName);
 }
