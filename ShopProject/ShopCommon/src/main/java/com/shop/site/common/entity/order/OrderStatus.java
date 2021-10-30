@@ -2,7 +2,7 @@ package com.shop.site.common.entity.order;
 
 public enum OrderStatus {
 
-    NEW{
+    NEW {
         @Override
         public String defaultDescription() {
             return "Order was placed by the customer";
@@ -37,6 +37,11 @@ public enum OrderStatus {
         public String defaultDescription() {
             return "Customer received products";
         }
+    }, RETURN_REQUESTED {
+        @Override
+        public String defaultDescription() {
+            return "Customer sent request to return purchase";
+        }
     }, RETURNED {
         @Override
         public String defaultDescription() {
@@ -50,8 +55,9 @@ public enum OrderStatus {
     }, REFUNDED {
         @Override
         public String defaultDescription() {
-            return  "refunded";
+            return "refunded";
         }
     };
+
     public abstract String defaultDescription();
-    }
+}
