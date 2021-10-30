@@ -32,7 +32,7 @@ public class OrderService {
     public Order createOrder(Customer customer, Address address, List<CartItem> cartItems, PaymentMethod paymentMethod, CheckoutInfo checkoutInfo) {
         Order newOrder = new Order();
         newOrder.setOrderTime(new Date());
-        if(paymentMethod.equals(PaymentMethod.PAYPAL)) {
+        if (paymentMethod.equals(PaymentMethod.PAYPAL)) {
             newOrder.setStatus(OrderStatus.PAID);
         } else {
             newOrder.setStatus(OrderStatus.NEW);
@@ -80,10 +80,11 @@ public class OrderService {
         if (keyword != null) {
             return repo.findAll(keyword, customer.getId(), pageable);
         }
-
         return repo.findAll(customer.getId(), pageable);
-
     }
 
+    public Order getOrder(Integer id, Customer customer) {
+        return repo.findByIdAndCustomer(id, customer);
+    }
 
 }

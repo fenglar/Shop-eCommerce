@@ -310,6 +310,12 @@ public class Order extends AbstractAddress {
     }
 
     @Transient
+    public boolean isProcessing() {
+        return hasStatus(OrderStatus.PROCESSING);
+    }
+
+
+    @Transient
     public String getProductNames() {
         String productNames = "";
 

@@ -1,5 +1,6 @@
 package com.shop.site.order;
 
+import com.shop.site.common.entity.Customer;
 import com.shop.site.common.entity.order.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,5 +16,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
 
     @Query("SELECT o FROM Order o WHERE o.customer.id = ?1")
     public Page<Order> findAll(Integer customerId, Pageable pageable);
+
+    public Order findByIdAndCustomer(Integer id, Customer customer);
 
 }
