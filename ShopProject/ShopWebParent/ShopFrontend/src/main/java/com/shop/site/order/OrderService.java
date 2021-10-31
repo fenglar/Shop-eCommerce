@@ -5,11 +5,9 @@ import com.shop.site.checkout.CheckoutInfo;
 import com.shop.site.common.entity.Address;
 import com.shop.site.common.entity.CartItem;
 import com.shop.site.common.entity.Customer;
-import com.shop.site.common.entity.order.Order;
-import com.shop.site.common.entity.order.OrderDetail;
-import com.shop.site.common.entity.order.OrderStatus;
-import com.shop.site.common.entity.order.PaymentMethod;
+import com.shop.site.common.entity.order.*;
 import com.shop.site.common.entity.product.Product;
+import com.shop.site.common.exception.OrderNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -87,4 +85,24 @@ public class OrderService {
         return repo.findByIdAndCustomer(id, customer);
     }
 
+    public void setOrderReturnRequested(OrderReturnRequest request, Customer customer) throws OrderNotFoundException {
+        Order order = repo.findByIdAndCustomer(request.getOrderId(), customer);
+        if (order == null) {
+            throw new OrderNotFoundException("Order ID: " + request.getOrderId() + "not found");
+        }
+        if (order.isReturnRequested()) return;
+        OrderTrack track = new OrderTrack();
+        track.setOrder(order);
+        track.setUpdatedTime(new Date());
+        track.setStatus(OrderStatus.RETURN_REQUESTED);
+        String notes = "Reason: " + request.getReason();
+        if (!"".equals(request.getNote())) {
+            notes += ". " + request.getNote();
+        }
+        track.setNotes(notes);
+        order.getOrderTracks().add(track);
+        order.setStatus(OrderStatus.RETURN_REQUESTED);
+
+        repo.save(order);
+    }
 }
