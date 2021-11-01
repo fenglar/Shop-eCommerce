@@ -138,7 +138,7 @@ public class Category extends IdBasedEntity{
     @Transient
     public String getImagePath() {
         if(id==null) return "/images/image-thumbnail.png";
-        return "/category-images/" + this.id + "/"+this.image;
+        return Constants.S3_BASE_URI + "/category-images/" + this.id + "/"+this.image;
     }
     public boolean isHasChildren() {
         return hasChildren;
