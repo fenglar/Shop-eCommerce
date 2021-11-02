@@ -1,5 +1,6 @@
 package com.shop.site.admin.brand;
 
+import com.shop.site.admin.AmazonS3Util;
 import com.shop.site.admin.FileUploadUtil;
 import com.shop.site.admin.category.CategoryService;
 import com.shop.site.admin.paging.PagingAndSortingHelper;
@@ -65,10 +66,10 @@ public class BrandController {
             brand.setLogo(fileName);
 
             Brand savedBrand = brandService.save(brand);
-            String uploadDir = "../brand-logos/" + savedBrand.getId();
+            String uploadDir = "brand-logos/" + savedBrand.getId();
 
-            FileUploadUtil.cleanDir(uploadDir);
-            FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+            AmazonS3Util.removeFolder(uploadDir);
+            AmazonS3Util.uploadFile(uploadDir, fileName,multipartFile.getInputStream());
         } else {
             brandService.save(brand);
         }
@@ -99,8 +100,8 @@ public class BrandController {
                               RedirectAttributes redirectAttributes) {
         try {
             brandService.delete(id);
-            String brandDir = "../brand-images/" + id;
-            FileUploadUtil.removeDir(brandDir);
+            String brandDir = "brand-images/" + id;
+            AmazonS3Util.removeFolder(brandDir);
             redirectAttributes.addFlashAttribute("message", "The brand ID " + id + "has been deleted succesfully");
 
         } catch (BrandNotFoundException ex) {

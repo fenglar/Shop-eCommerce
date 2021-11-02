@@ -1,5 +1,6 @@
 package com.shop.site.admin.category;
 
+import com.shop.site.admin.AmazonS3Util;
 import com.shop.site.admin.FileUploadUtil;
 import com.shop.site.common.entity.Category;
 import com.shop.site.common.exception.CategoryNotFoundException;
@@ -83,9 +84,9 @@ public class CategoryController {
             String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
             category.setImage(fileName);
             Category savedCategory = service.save(category);
-            String uploadDir = "../category-images/" + savedCategory.getId();
-            FileUploadUtil.cleanDir(uploadDir);
-            FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+            String uploadDir = "category-images/" + savedCategory.getId();
+            AmazonS3Util.removeFolder(uploadDir);
+            AmazonS3Util.uploadFile(uploadDir, fileName,multipartFile.getInputStream());
         } else {
             service.save(category);
         }
@@ -130,7 +131,8 @@ public class CategoryController {
         try {
             service.delete(id);
             String categoryDir = "../category-images/" + id;
-            FileUploadUtil.removeDir(categoryDir);
+            AmazonS3Util.removeFolder(categoryDir);
+
             redirectAttributes.addFlashAttribute("message", "The category ID " + id + "has been deleted succesfully");
 
         } catch (CategoryNotFoundException ex) {

@@ -12,7 +12,7 @@ import java.util.List;
 
 @Configuration
 public class MvcConfig implements WebMvcConfigurer {
-    @Override
+   /* @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         exposeDirectory("user-photos", registry);
         exposeDirectory("../category-images", registry);
@@ -26,7 +26,7 @@ public class MvcConfig implements WebMvcConfigurer {
         String logicalPath = pathPattern.replace("..", "") + "/**";
 
         registry.addResourceHandler(logicalPath).addResourceLocations("file:/" + absolutePath + "/");
-    }
+    }*/
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {

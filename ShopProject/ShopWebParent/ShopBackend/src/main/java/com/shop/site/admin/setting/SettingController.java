@@ -1,5 +1,6 @@
 package com.shop.site.admin.setting;
 
+import com.shop.site.admin.AmazonS3Util;
 import com.shop.site.admin.FileUploadUtil;
 import com.shop.site.common.entity.Constants;
 import com.shop.site.common.entity.Currency;
@@ -47,21 +48,22 @@ public class SettingController {
     public String saveGeneralSettings(@RequestParam("fileImage") MultipartFile multipartFile,
                                       HttpServletRequest request, RedirectAttributes ra) throws IOException {
         GeneralSettingBag settingBag = service.getGeneralSettings();
-        setSiteLogo(multipartFile, settingBag);
+        saveSiteLogo(multipartFile, settingBag);
         saveCurrencySymbol(request, settingBag);
         updateSettingValuesFromForm(request, settingBag.list());
         ra.addFlashAttribute("message", "General settings have been saved.");
         return "redirect:/settings";
     }
 
-    private void setSiteLogo(MultipartFile multipartFile, GeneralSettingBag settingBag) throws IOException {
+    private void saveSiteLogo(MultipartFile multipartFile, GeneralSettingBag settingBag) throws IOException {
         if (!multipartFile.isEmpty()) {
             String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
             String value = "/site-logo." + fileName;
             settingBag.updateSiteLogo(value);
-            String uploadDir = "../site-logo/";
-            FileUploadUtil.cleanDir(uploadDir);
-            FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+            String uploadDir = "site-logo";
+            AmazonS3Util.removeFolder(uploadDir);
+            AmazonS3Util.uploadFile(uploadDir, fileName,multipartFile.getInputStream());
+
         }
     }
 

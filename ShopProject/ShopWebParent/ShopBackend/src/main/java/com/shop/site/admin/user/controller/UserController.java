@@ -1,5 +1,6 @@
 package com.shop.site.admin.user.controller;
 
+import com.shop.site.admin.AmazonS3Util;
 import com.shop.site.admin.FileUploadUtil;
 import com.shop.site.admin.paging.PagingAndSortingHelper;
 import com.shop.site.admin.paging.PagingAndSortingParam;
@@ -70,8 +71,8 @@ public class UserController {
             user.setPhotos(fileName);
             User savedUser = service.save(user);
             String uploadDir = "user-photos/" + savedUser.getId();
-            FileUploadUtil.cleanDir(uploadDir);
-            FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+            AmazonS3Util.removeFolder(uploadDir);
+            AmazonS3Util.uploadFile(uploadDir, fileName,multipartFile.getInputStream());
         } else {
             if (user.getPhotos().isEmpty()) user.setPhotos(null);
             service.save(user);
@@ -108,6 +109,9 @@ public class UserController {
     public String deleteUser(@PathVariable(name = "id") Integer id, Model model, RedirectAttributes redirectAttributes) {
         try {
             service.delete(id);
+            String userPhotosDir = "user-photos/"+id;
+            AmazonS3Util.removeFolder(userPhotosDir);
+
             redirectAttributes.addFlashAttribute("message", "The User ID" + id + "has been deleted successfully");
         } catch (UserNotFoundException ex) {
             redirectAttributes.addFlashAttribute("message", ex.getMessage());

@@ -1,5 +1,6 @@
 package com.shop.site.admin.product;
 
+import com.shop.site.admin.AmazonS3Util;
 import com.shop.site.admin.FileUploadUtil;
 import com.shop.site.common.entity.product.Product;
 import com.shop.site.common.entity.product.ProductImage;
@@ -13,30 +14,25 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class ProductSaveHelper {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
 
     static void deleteExtraImagesWeredRemovedOnForm(Product product) {
-        String extraImageDir = "../product-images/" + product.getId() + "/extras";
-        Path dirPath = Paths.get(extraImageDir);
-        try {
-            Files.list(dirPath).forEach(file -> {
-                String filename = file.toFile().getName();
-                LOGGER.info("Deleted extra image: " + filename);
-                if (!product.containsImageName(filename)) {
-                    try {
-                        Files.delete(file);
-                    } catch (IOException e) {
-                        LOGGER.error("Could not delete extra image: " + filename);
-                    }
-                }
-            });
-        } catch (IOException ex) {
-            LOGGER.error("Could not list directory: " + dirPath);
+        String extraImageDir = "product-images/" + product.getId() + "/extras";
+        List<String> listObjectKeys = AmazonS3Util.listFolder(extraImageDir);
 
+        for (String objectKey : listObjectKeys) {
+            int lastIndexOfSlash = objectKey.lastIndexOf("/");
+            String fileName = objectKey.substring(lastIndexOfSlash + 1, objectKey.length());
+            if (!product.containsImageName(fileName)) {
+                AmazonS3Util.deleteFile(objectKey);
+                System.out.println("Deleted extra image: " + objectKey);
+            }
         }
+
     }
 
     static void setExistingExtraImageNames(String[] imageIDs, String[] imageNames, Product product) {
@@ -68,23 +64,27 @@ public class ProductSaveHelper {
     }
 
     static void saveUploadedImages(MultipartFile mainImageMultipart,
-                                    MultipartFile[] extraImageMultiparts, Product savedProduct) throws IOException {
+                                   MultipartFile[] extraImageMultiparts, Product savedProduct) throws IOException {
 
         if (!mainImageMultipart.isEmpty()) {
             String fileName = StringUtils.cleanPath(mainImageMultipart.getOriginalFilename());
-            String uploadDir = "../product_images/" + savedProduct.getId();
-
-            FileUploadUtil.cleanDir(uploadDir);
-            FileUploadUtil.saveFile(uploadDir, fileName, mainImageMultipart);
+            String uploadDir = "product_images/" + savedProduct.getId();
+            List<String> listObjectKeys = AmazonS3Util.listFolder(uploadDir + "/");
+            for(String objectKey : listObjectKeys){
+                if(objectKey.contains("/extras/")){
+                    AmazonS3Util.deleteFile(objectKey);
+                }
+            }
+            AmazonS3Util.uploadFile(uploadDir, fileName, mainImageMultipart.getInputStream());
         }
         if (extraImageMultiparts.length > 0) {
-            String uploadDir = "../product_images/" + savedProduct.getId() + "/extras";
+            String uploadDir = "product_images/" + savedProduct.getId() + "/extras";
 
             for (MultipartFile multipartFile : extraImageMultiparts) {
                 if (!multipartFile.isEmpty()) continue;
 
                 String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-                FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+                AmazonS3Util.uploadFile(uploadDir, fileName, multipartFile.getInputStream());
 
             }
 
