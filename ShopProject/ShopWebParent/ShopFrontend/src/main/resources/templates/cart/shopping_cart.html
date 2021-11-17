@@ -63,7 +63,7 @@
             <div class="mt-2">
                 <div th:if="${shippingSupported}">
                     <form th:action="@{/checkout}">
-                    <button type="submit"class="btn btn-danger p-3">Check Out</button>
+                        <button type="submit" class="btn btn-danger p-3">Check Out</button>
                     </form>
                 </div>
 
@@ -79,27 +79,28 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 
-                <div id="sectionEmptyCartMessage"
-                     th:class="'text-center' + ${#lists.isEmpty(cartItems) ? '' : 'd-none'}">
-                    <h3> You have not chosen any products yet</h3>
-                </div>
+    <div id="sectionEmptyCartMessage"
+         th:class="'text-center' + ${#lists.isEmpty(cartItems) ? '' : 'd-none'}">
+        <h3> You have not chosen any products yet</h3>
+    </div>
 
-                <div th:replace="fragments :: modal_dialog"></div>
-                <div th:replace="navigation :: footer_menu"></div>
-            </div>
-            <script type="text/javascript">
-                contextPath = "[[@{/}]]";
-                productId = "[[${product.id}]]";
-                var csrfHeaderName = "[[${_csrf.headerName}]]";
-                var csrfValue = "[[${_csrf.token}]]";
+    <div th:replace="fragments :: modal_dialog"></div>
+    <div th:replace="navigation :: footer_menu"></div>
+</div>
+<script type="text/javascript">
+    contextPath = "[[@{/}]]";
+    var csrfHeaderName = "[[${_csrf.headerName}]]";
+    var csrfValue = "[[${_csrf.token}]]";
 
-                decimalDigits = [[${DECIMAL_DIGITS}]];
-                decimalPointType = "[[${DECIMAL_POINT_TYPE}]]";
-                thousandsPointType = "[[${THOUSANDS_POINT_TYPE}]]"
-            </script>
-            <script type="text/javascript" th:src="@{/js/jquery.number.min.js}"></script>
-            <script type="text/javascript" th:src="@{/js/shopping_cart.js}"></script>
-            <script type="text/javascript" th:src="@{/js/common_modal.js}"></script>
+    decimalDigits = [[${DECIMAL_DIGITS}]];
+    decimalPointType = "[[${DECIMAL_POINT_TYPE}]]";
+    thousandsPointType = "[[${THOUSANDS_POINT_TYPE}]]"
+</script>
+<script type="text/javascript" th:src="@{/js/jquery.number.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/shopping_cart.js}"></script>
+<script type="text/javascript" th:src="@{/js/common_modal.js}"></script>
 </body>
 </html>
